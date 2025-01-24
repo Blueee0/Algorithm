@@ -105,3 +105,39 @@ struct ListNode {
 
 ![24.两两交换链表中的节点1](D:/coding/my_cans/Algorithm/Note.assets/24.%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B91.png)
 
+### 5. 删除链表倒数第N个节点
+
+如果要删除倒数第n个节点，让fast移动n步，然后让fast和slow同时移动，直到fast指向链表末尾。删掉slow所指向的节点就可以了。
+
+### 6. 链表相交
+
+我们求出两个链表的长度，并求出两个链表长度的差值，然后让curA移动到，和curB 末尾对齐的位置，此时我们就可以比较curA和curB是否相同，如果不相同，同时向后移动curA和curB，如果遇到curA == curB，则找到交点。否则循环退出返回空指针。
+
+### 7. 环形链表
+
+- 判断是否有环
+
+  可以使用快慢指针法，分别定义 fast 和 slow 指针，从头结点出发，fast指针每次移动两个节点，slow指针每次移动一个节点，如果 fast 和 slow指针在途中相遇 ，说明这个链表有环。
+
+  ![141.环形链表](D:/coding/my_cans/Algorithm/Note.assets/141.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8.gif)
+
+- 如何找到环的入口
+
+  ![img](D:/coding/my_cans/Algorithm/Note.assets/20220925103433.png)那么相遇时： slow指针走过的节点数为: `x + y`， fast指针走过的节点数：`x + y + n (y + z)`，n为fast指针在环内走了n圈才遇到slow指针， （y+z)为 一圈内节点的个数A。
+
+  因为fast指针是一步走两个节点，slow指针一步走一个节点， 所以 fast指针走过的节点数 = slow指针走过的节点数 * 2：
+
+  ```
+  (x + y) * 2 = x + y + n (y + z)
+  ```
+
+​	因为要找环形的入口，那么要求的是x，因为x表示 头结点到 环形入口节点的的距离：`x = n (y + z) - y = (n - 1) (y + z) + z` 
+
+​	这就意味着，**从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点**。
+
+​	![142.环形链表II（求入口）](D:/coding/my_cans/Algorithm/Note.assets/142.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II%EF%BC%88%E6%B1%82%E5%85%A5%E5%8F%A3%EF%BC%89.gif)
+
+![img](D:/coding/my_cans/Algorithm/Note.assets/%E9%93%BE%E8%A1%A8%E6%80%BB%E7%BB%93.png)
+
+## 哈希表
+
