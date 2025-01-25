@@ -141,3 +141,26 @@ struct ListNode {
 
 ## 哈希表
 
+哈希碰撞的处理方式：拉链法、线性探测法（tableSize > dataSize）
+
+哈希表的数据结构：数组、set、map【红黑树是一种平衡二叉搜索树】
+
+**需要快速判断一个元素是否出现集合里的时候，就要考虑哈希法**
+
+数组：数值较小，比如字母26个。
+
+set：数值比较分散
+
+map：
+
+<img src="D:/coding/my_cans/Algorithm/Note.assets/image-20250125182055849.png" alt="image-20250125182055849" style="zoom: 67%;" />
+
+<img src="D:/coding/my_cans/Algorithm/Note.assets/image-20250125182207335.png" alt="image-20250125182207335" style="zoom:67%;" />
+
+### 1. 有效的字母异位词
+
+定义一个数组hash[26]来记录字符串a里，26个字母出现的频率，然后再遍历字符串b的时候，只需要将对应的字母做-1就可以。当最后hash[26]数组的元素全为0时，则表明这是字母异位词，return true
+
+### 2. 两个数组的交集
+
+<img src="D:/coding/my_cans/Algorithm/Note.assets/20220707173513.png" alt="set哈希法" style="zoom:50%;" />
