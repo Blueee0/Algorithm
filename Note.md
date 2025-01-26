@@ -147,11 +147,11 @@ struct ListNode {
 
 **需要快速判断一个元素是否出现集合里的时候，就要考虑哈希法**
 
-数组：数值较小，比如字母26个。
+数组：数值较小，比如字母26个。【Leetcode242：有效的字母异位词】
 
-set：数值比较分散
+set：数值比较分散【Leetcode349：两个数组的交集】
 
-map：
+map：需要使用 key value结构来存放，key来存元素，value来存下标。【Leetcode1：两数相加】
 
 <img src="D:/coding/my_cans/Algorithm/Note.assets/image-20250125182055849.png" alt="image-20250125182055849" style="zoom: 67%;" />
 
@@ -164,3 +164,30 @@ map：
 ### 2. 两个数组的交集
 
 <img src="D:/coding/my_cans/Algorithm/Note.assets/20220707173513.png" alt="set哈希法" style="zoom:50%;" />
+
+### 3. 求和
+
+1. **两数之和**
+
+   - 为什么会想到用哈希表：需要存下遍历过的元素，然后在遍历过的元素中，查找对应的元素`target-nums[i]`
+   - 哈希表为什么用map：需要存放两个元素，key来存元素（查找对象），value来存下标。
+   - 本题map是用来存什么的：用来存放遍历过的元素
+   - map中的key和value用来存什么的：key存元素，value存下标
+
+   <img src="D:/coding/my_cans/Algorithm/Note.assets/20220711202638.png" alt="过程一" style="zoom:50%;" />
+
+2. **四数相加**
+
+   1. 首先定义 一个unordered_map，**key放a和b两数之和，value 放a和b两数之和出现的次数**。
+   2. 遍历大A和大B数组，统计两个数组元素之和，和出现的次数，放到map中。
+   3. 定义int变量count，用来统计 a+b+c+d = 0 出现的次数。
+   4. 再遍历大C和大D数组，找到如果 0-(c+d) 在map中出现过的话，就用count把map中key对应的value也就是出现次数统计出来。
+   5. 最后返回统计值 count 就可以了
+
+3. **三数之和**
+
+   
+
+4. **四数之和**
+
+   
