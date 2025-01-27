@@ -186,7 +186,15 @@ map：需要使用 key value结构来存放，key来存元素，value来存下�
 
 3. **三数之和**
 
-   
+   1. 首先将数组排序，然后有一层for循环，i从下标0的地方开始，同时定一个下标left 定义在i+1的位置上，定义下标right 在数组结尾的位置上。
+
+   2. 接下来如何移动left 和right呢， 如果nums[i] + nums[left] + nums[right] > 0 就说明 此时三数之和大了，因为数组是排序后了，所以right下标就应该向左移动，这样才能让三数之和小一些。
+
+   3. 如果 nums[i] + nums[left] + nums[right] < 0 说明 此时 三数之和小了，left 就向右移动，才能让三数之和大一些，直到left与right相遇为止。
+
+   - 关键在于**去重**：①对i进行去重`nums[i] == nums[i-1]` 
+
+     ​		         ②在收获结果后，对left和right进行去重`nums[right] == nums[right - 1]`；`nums[left] == nums[left+1]`
 
 4. **四数之和**
 
