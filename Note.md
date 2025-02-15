@@ -399,3 +399,103 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
 ### 1. 基础理论
 
+1. **二叉树的种类**
+
+   - 满二叉树：只有度为0的结点和度为2的结点，并且度为0的结点在同一层上。深度为k，有 `2^k - 1`个节点
+
+     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806185805576.png" alt="img" style="zoom:50%;" />
+
+   - 完全二叉树：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 h 层（h从1开始），则该层包含 1~ 2^(h-1) 个节点。
+
+     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200920221638903.png" alt="img" style="zoom:50%;" />
+
+   - 二叉搜索树（有序树）：O(logn)
+
+     - 若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值；
+
+     - 若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值；
+
+     - 它的左、右子树也分别为二叉排序树
+
+       <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806190304693.png" alt="img" style="zoom: 67%;" />
+
+   - 平衡二叉搜索树（AVL）：它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
+
+     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806190511967.png" alt="img" style="zoom: 50%;" />
+
+   **C++中map、set、multimap，multiset的底层实现都是平衡二叉搜索树**，所以map、set的增删操作时间时间复杂度是**logn**，
+
+   注意，**unordered_map、unordered_set，unordered_map、unordered_set底层实现是哈希表**。
+
+2. **二叉树的存储方式**
+
+   - 链式存储
+
+     <img src="D:/coding/my_cans/Algorithm/Note.assets/2020092019554618.png" alt="img" style="zoom:50%;" />
+
+   - 顺序存储
+
+     下标`i`的左孩子`2i+1`，右孩子`2i+2`
+
+     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200920200429452.png" alt="img" style="zoom:50%;" />
+
+3. **遍历方式**
+
+   - 深度优先遍历：栈
+
+     - 前序遍历（递归法，迭代法）
+     - 中序遍历（递归法，迭代法）
+     - 后序遍历（递归法，迭代法）
+
+   - 广度优先遍历：队列
+
+     - 层次遍历（迭代法）
+
+     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806191109896.png" alt="img" style="zoom:50%;" />
+
+4. **定义方式**
+
+   ```c++
+   struct TreeNode {
+       int val;
+       TreeNode *left;
+       TreeNode *right;
+       TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+   };
+   ```
+
+
+
+### 2. 遍历方式
+
+1. **递归遍历**
+
+   1. **确定递归函数的参数和返回值：** 确定哪些参数是递归的过程中需要处理的，那么就在递归函数里加上这个参数， 并且还要明确每次递归的返回值是什么，进而确定递归函数的返回类型。
+   2. **确定终止条件：** 写完了递归算法, 运行的时候，经常会遇到栈溢出的错误，就是没写终止条件或者终止条件写的不对，操作系统也是用一个栈的结构来保存每一层递归的信息，如果递归没有终止，操作系统的内存栈必然就会溢出。
+   3. **确定单层递归的逻辑：** 确定每一层递归需要处理的信息。在这里也就会重复调用自己来实现递归的过程。
+
+2. **迭代遍历**
+
+   - 前序遍历（中左右）【遍历节点 = 处理节点】
+
+     每次先处理的是中间节点，那么先将根节点放入栈中，然后将右孩子加入栈，再加入左孩子。
+
+   <img src="D:/coding/my_cans/Algorithm/Note.assets/%E4%BA%8C%E5%8F%89%E6%A0%91%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E8%BF%AD%E4%BB%A3%E6%B3%95%EF%BC%89.gif" alt="二叉树前序遍历（迭代法）" style="zoom:67%;" />
+
+   - 中序遍历（左中右）
+
+     使用指针来访问节点，访问到最底层，将访问的节点放进栈。
+
+     当访问到最底层时，弹出节点，按照左中右开始访问节点
+
+   - 后序遍历（左右中）
+
+     中左右 --> 中右左 --> 左右中 
+
+3. **层序遍历**
+
+   使用队列模拟
+
+   <img src="D:/coding/my_cans/Algorithm/Note.assets/102%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86.gif" alt="102二叉树的层序遍历" style="zoom: 67%;" />
+
+<img src="D:/coding/my_cans/Algorithm/Note.assets/20210219190809451.png" alt="二叉树大纲" style="zoom:50%;" />
