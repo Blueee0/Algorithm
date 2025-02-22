@@ -5,6 +5,8 @@
         "xstring": "cpp",
         "xutility": "cpp",
         "vector": "cpp",
-        "xlocinfo": "cpp"
+        "xlocinfo": "cpp",
+        "algorithm": "cpp",
+        "limits": "cpp"
     }
 }
