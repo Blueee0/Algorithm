@@ -86,11 +86,11 @@ double myPow(double x, int n) {
 - 快指针：寻找新数组的元素 ，新数组就是不含有目标元素的数组
 - 慢指针：指向更新 新数组下标的位置
 
-![27.移除元素-双指针法](D:/coding/my_cans/Algorithm/Note.assets/27.%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0-%E5%8F%8C%E6%8C%87%E9%92%88%E6%B3%95.gif)
+![27.移除元素-双指针法](./Note.assets/27.%E7%A7%BB%E9%99%A4%E5%85%83%E7%B4%A0-%E5%8F%8C%E6%8C%87%E9%92%88%E6%B3%95.gif)
 
 ### 3. 有序数组的平方
 
-![img](D:/coding/my_cans/Algorithm/Note.assets/977.%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E5%B9%B3%E6%96%B9.gif)
+![img](./Note.assets/977.%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E5%B9%B3%E6%96%B9.gif)
 
 ### 4. 长度最小的子数组（滑动窗口）
 
@@ -102,13 +102,13 @@ double myPow(double x, int n) {
 
 解题的关键在于 窗口的起始位置如何移动，如图所示：
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/20210312160441942.png" alt="leetcode_209" style="zoom: 80%;" />
+<img src="./Note.assets/20210312160441942.png" alt="leetcode_209" style="zoom: 80%;" />
 
 ### 5. 螺旋矩阵
 
 ​	这里一圈下来，我们要画每四条边，这四条边怎么画，每画一条边都要坚持一致的左闭右开，或者左开右闭的原则，这样这一圈才能按照统一的规则画下来。那么我按照左闭右开的原则，来画一圈，大家看一下：
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/20220922102236.png" alt="img" style="zoom:50%;" />
+<img src="./Note.assets/20220922102236.png" alt="img" style="zoom:50%;" />
 
 ### 6. 区间和
 
@@ -118,11 +118,11 @@ double myPow(double x, int n) {
 
 如果，我们想统计，在vec数组上 下标 2 到下标 5 之间的累加和，那是不是就用 p[5] - p[1] 就可以了。
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/20240627110604.png" alt="img" style="zoom:50%;" />
+<img src="./Note.assets/20240627110604.png" alt="img" style="zoom:50%;" />
 
 
 
-![img](D:/coding/my_cans/Algorithm/Note.assets/%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.png)
+![img](./Note.assets/%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.png)
 
 ## 链表
 
@@ -172,7 +172,7 @@ struct ListNode {
 
 注意返回头结点时，应该返回dummyhead->next
 
-![24.两两交换链表中的节点1](D:/coding/my_cans/Algorithm/Note.assets/24.%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B91.png)
+![24.两两交换链表中的节点1](./Note.assets/24.%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B91.png)
 
 ### 5. 删除链表倒数第N个节点
 
@@ -188,11 +188,11 @@ struct ListNode {
 
   可以使用快慢指针法，分别定义 fast 和 slow 指针，从头结点出发，fast指针每次移动两个节点，slow指针每次移动一个节点，如果 fast 和 slow指针在途中相遇 ，说明这个链表有环。
 
-  ![141.环形链表](D:/coding/my_cans/Algorithm/Note.assets/141.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8.gif)
+  ![141.环形链表](./Note.assets/141.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8.gif)
 
 - 如何找到环的入口
 
-  ![img](D:/coding/my_cans/Algorithm/Note.assets/20220925103433.png)那么相遇时： slow指针走过的节点数为: `x + y`， fast指针走过的节点数：`x + y + n (y + z)`，n为fast指针在环内走了n圈才遇到slow指针， （y+z)为 一圈内节点的个数A。
+  ![img](./Note.assets/20220925103433.png)那么相遇时： slow指针走过的节点数为: `x + y`， fast指针走过的节点数：`x + y + n (y + z)`，n为fast指针在环内走了n圈才遇到slow指针， （y+z)为 一圈内节点的个数A。
 
   因为fast指针是一步走两个节点，slow指针一步走一个节点， 所以 fast指针走过的节点数 = slow指针走过的节点数 * 2：
 
@@ -204,9 +204,9 @@ struct ListNode {
 
 ​	这就意味着，**从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点**。
 
-​	![142.环形链表II（求入口）](D:/coding/my_cans/Algorithm/Note.assets/142.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II%EF%BC%88%E6%B1%82%E5%85%A5%E5%8F%A3%EF%BC%89.gif)
+​	![142.环形链表II（求入口）](./Note.assets/142.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II%EF%BC%88%E6%B1%82%E5%85%A5%E5%8F%A3%EF%BC%89.gif)
 
-![img](D:/coding/my_cans/Algorithm/Note.assets/%E9%93%BE%E8%A1%A8%E6%80%BB%E7%BB%93.png)
+![img](./Note.assets/%E9%93%BE%E8%A1%A8%E6%80%BB%E7%BB%93.png)
 
 ## 哈希表
 
@@ -222,9 +222,9 @@ set：数值比较分散【Leetcode349：两个数组的交集】
 
 map：需要使用 key value结构来存放，key来存元素，value来存下标。【Leetcode1：两数相加】
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/image-20250125182055849.png" alt="image-20250125182055849" style="zoom: 67%;" />
+<img src="./Note.assets/image-20250125182055849.png" alt="image-20250125182055849" style="zoom: 67%;" />
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/image-20250125182207335.png" alt="image-20250125182207335" style="zoom:67%;" />
+<img src="./Note.assets/image-20250125182207335.png" alt="image-20250125182207335" style="zoom:67%;" />
 
 ### 1. 有效的字母异位词
 
@@ -232,7 +232,7 @@ map：需要使用 key value结构来存放，key来存元素，value来存下�
 
 ### 2. 两个数组的交集
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/20220707173513.png" alt="set哈希法" style="zoom:50%;" />
+<img src="./Note.assets/20220707173513.png" alt="set哈希法" style="zoom:50%;" />
 
 ### 3. 求和
 
@@ -243,7 +243,7 @@ map：需要使用 key value结构来存放，key来存元素，value来存下�
    - 本题map是用来存什么的：用来存放遍历过的元素
    - map中的key和value用来存什么的：key存元素，value存下标
 
-   <img src="D:/coding/my_cans/Algorithm/Note.assets/20220711202638.png" alt="过程一" style="zoom:50%;" />
+   <img src="./Note.assets/20220711202638.png" alt="过程一" style="zoom:50%;" />
 
 2. **四数相加**
 
@@ -279,7 +279,7 @@ map：需要使用 key value结构来存放，key来存元素，value来存下�
 
 **右旋转字符串**：先对字符串整体翻转，再对两个子串里的的字符在翻转
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/20231106172058.png" alt="img" style="zoom: 33%;" />
+<img src="./Note.assets/20231106172058.png" alt="img" style="zoom: 33%;" />
 
 ### 2. 替换数字
 
@@ -311,11 +311,11 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
   - 初始化、前后缀不相同、前后缀相同、更新next
 
-  ![KMP精讲3](D:/coding/my_cans/Algorithm/Note.assets/KMP%E7%B2%BE%E8%AE%B23.gif)
+  ![KMP精讲3](./Note.assets/KMP%E7%B2%BE%E8%AE%B23.gif)
 
 - 如何利用前缀表实现匹配
 
-  ![KMP精讲2](D:/coding/my_cans/Algorithm/Note.assets/KMP%E7%B2%BE%E8%AE%B22.gif)
+  ![KMP精讲2](./Note.assets/KMP%E7%B2%BE%E8%AE%B22.gif)
 
 字符串匹配类题目：文本串是否由重复的子串组成。
 
@@ -341,7 +341,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
   std::stack<int, std::vector<int> > third;  // 使用vector为底层容器的栈
   ```
 
-  <img src="D:/coding/my_cans/Algorithm/Note.assets/20210104235459376.png" alt="栈与队列理论3" style="zoom:50%;" />
+  <img src="./Note.assets/20210104235459376.png" alt="栈与队列理论3" style="zoom:50%;" />
 
 - stack 提供迭代器来遍历stack空间么？
 
@@ -383,7 +383,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 1. pop(value)：如果窗口移除的元素value等于单调队列的出口元素，那么队列弹出元素，否则不用任何操作
 2. push(value)：如果push的元素value大于入口元素的数值，那么就将队列入口的元素弹出，直到push元素的数值小于等于队列入口元素的数值为止
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/239.%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC-2.gif" alt="239.滑动窗口最大值-2" style="zoom: 67%;" />
+<img src="./Note.assets/239.%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC-2.gif" alt="239.滑动窗口最大值-2" style="zoom: 67%;" />
 
 ### 5. 前K个高频元素
 
@@ -411,11 +411,11 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    - 满二叉树：只有度为0的结点和度为2的结点，并且度为0的结点在同一层上。深度为k，有 `2^k - 1`个节点
 
-     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806185805576.png" alt="img" style="zoom:50%;" />
+     <img src="./Note.assets/20200806185805576.png" alt="img" style="zoom:50%;" />
 
    - 完全二叉树：在完全二叉树中，除了最底层节点可能没填满外，其余每层节点数都达到最大值，并且最下面一层的节点都集中在该层最左边的若干位置。若最底层为第 h 层（h从1开始），则该层包含 1~ 2^(h-1) 个节点。
 
-     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200920221638903.png" alt="img" style="zoom:50%;" />
+     <img src="./Note.assets/20200920221638903.png" alt="img" style="zoom:50%;" />
 
    - 二叉搜索树（有序树）：O(logn)
 
@@ -425,11 +425,11 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
      - 它的左、右子树也分别为二叉排序树
 
-       <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806190304693.png" alt="img" style="zoom: 67%;" />
+       <img src="./Note.assets/20200806190304693.png" alt="img" style="zoom: 67%;" />
 
    - 平衡二叉搜索树（AVL）：它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
 
-     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806190511967.png" alt="img" style="zoom: 50%;" />
+     <img src="./Note.assets/20200806190511967.png" alt="img" style="zoom: 50%;" />
 
    **C++中map、set、multimap，multiset的底层实现都是平衡二叉搜索树**，所以map、set的增删操作时间时间复杂度是**logn**，
 
@@ -439,13 +439,13 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    - 链式存储
 
-     <img src="D:/coding/my_cans/Algorithm/Note.assets/2020092019554618.png" alt="img" style="zoom:50%;" />
+     <img src="./Note.assets/2020092019554618.png" alt="img" style="zoom:50%;" />
 
    - 顺序存储
 
      下标`i`的左孩子`2i+1`，右孩子`2i+2`
 
-     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200920200429452.png" alt="img" style="zoom:50%;" />
+     <img src="./Note.assets/20200920200429452.png" alt="img" style="zoom:50%;" />
 
 3. **遍历方式**
 
@@ -459,7 +459,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
      - 层次遍历（迭代法）
 
-     <img src="D:/coding/my_cans/Algorithm/Note.assets/20200806191109896.png" alt="img" style="zoom:50%;" />
+     <img src="./Note.assets/20200806191109896.png" alt="img" style="zoom:50%;" />
 
 4. **定义方式**
 
@@ -488,7 +488,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
      每次先处理的是中间节点，那么先将根节点放入栈中，然后将右孩子加入栈，再加入左孩子。
 
-   <img src="D:/coding/my_cans/Algorithm/Note.assets/%E4%BA%8C%E5%8F%89%E6%A0%91%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E8%BF%AD%E4%BB%A3%E6%B3%95%EF%BC%89.gif" alt="二叉树前序遍历（迭代法）" style="zoom:67%;" />
+   <img src="./Note.assets/%E4%BA%8C%E5%8F%89%E6%A0%91%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E8%BF%AD%E4%BB%A3%E6%B3%95%EF%BC%89.gif" alt="二叉树前序遍历（迭代法）" style="zoom:67%;" />
 
    - 中序遍历（左中右）
 
@@ -504,7 +504,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    使用队列模拟
 
-   <img src="D:/coding/my_cans/Algorithm/Note.assets/102%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86.gif" alt="102二叉树的层序遍历" style="zoom: 67%;" />
+   <img src="./Note.assets/102%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E5%BA%8F%E9%81%8D%E5%8E%86.gif" alt="102二叉树的层序遍历" style="zoom: 67%;" />
 
 ### 3. 二叉树的属性
 
@@ -528,7 +528,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    先判断子树是否是满二叉树，然后计算节点数量返回给父节点
 
-   <img src="D:/coding/my_cans/Algorithm/Note.assets/20201124092543662.png" alt="222.完全二叉树的节点个数" style="zoom: 33%;" />
+   <img src="./Note.assets/20201124092543662.png" alt="222.完全二叉树的节点个数" style="zoom: 33%;" />
 
 4. **平衡二叉树**
    - 一棵高度平衡二叉树定义为：一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过1
@@ -604,7 +604,25 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    
 
-### 5. 二叉搜索树 BST 的属性
+### 5. 二叉树公共祖先问题
+
+1. **二叉树的最近公共祖先**
+
+   - 求最小公共祖先，需要从底向上遍历，那么二叉树，只能通过**后序遍历（即：回溯）**实现从底向上的遍历方式。
+
+   - 在回溯的过程中，必然要遍历整棵二叉树，即使已经找到结果了，依然要把其他节点遍历完，因为要**使用递归函数的返回值（也就是代码中的left和right）做逻辑判断**。
+
+   - 如果返回值left为空，right不为空要返回right，因为这样可以用返回right传给上一层结果。
+
+   
+
+2. **二叉搜索树的最近公共祖先**
+
+   - 比较根节点和p、q的大小，加快搜索，如果节点的值在p和q之间，则节点就是公共祖先
+
+     
+
+### 6. 二叉搜索树 BST 的属性
 
 二叉搜索树（有序树）：
 
@@ -637,10 +655,27 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    
 
-### 6. 二叉树公共祖先问题
+### 7. 二叉搜索树的修改与构造
 
-1. 
+1. **二叉搜索树中的插入操作**
 
-   
+   - 注意：在有返回值的递归函数中，要接住返回值！
 
-<img src="D:/coding/my_cans/Algorithm/Note.assets/20210219190809451.png" alt="二叉树大纲" style="zoom:50%;" />
+2. **删除二叉搜索树中的节点**
+
+   - 第一种情况：没找到删除的节点，遍历到空节点直接返回了
+   - 第二种情况：左右孩子都为空（叶子节点），直接删除节点， 返回NULL为根节点
+   - 第三种情况：删除节点的左孩子为空，右孩子不为空，删除节点，右孩子补位，返回右孩子为根节点
+   - 第四种情况：删除节点的右孩子为空，左孩子不为空，删除节点，左孩子补位，返回左孩子为根节点
+   - 第五种情况：左右孩子节点都不为空，这里假设使用右孩子继位，则删除节点的左子树，应该放到右子树的最左侧，返回删除节点右孩子为新的根节点。
+
+   **注意**：本题不需要遍历全部二叉树，遇到需要删除的节点时就终止，然后开始判断删除逻辑
+
+3. **修剪二叉搜索树**
+
+   同上，但是如果当前节点小于目标区间的话，**不能直接删除当前节点，而是继续遍历当前节点的右孩子**
+
+4. **将有序数组转换为二叉搜索树**
+
+   数组中间的元素作为中间节点，然后构造左子树、右子树
+
