@@ -678,4 +678,102 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 4. **将有序数组转换为二叉搜索树**
 
    数组中间的元素作为中间节点，然后构造左子树、右子树
+   
+   
 
+## 回溯算法
+
+### 1. 基础理论
+
+1. **回溯法解决的问题**
+
+   - 组合问题：N个数里面按一定规则找出k个数的集合
+   - 切割问题：一个字符串按一定规则有几种切割方式
+   - 子集问题：一个N个数的集合里有多少符合条件的子集
+   - 排列问题：N个数按一定规则全排列，有几种排列方式
+   - 棋盘问题：N皇后，解数独等等
+
+   回溯的本质是**穷举，纯暴力搜索**
+
+2. **回溯法模版**
+
+   <img src="./Note.assets/20210130173631174.png" alt="回溯算法理论基础" style="zoom: 50%;" />
+
+   ```c++
+   void backtracking(参数) {
+       if (终止条件) {
+           存放结果;
+           return;
+       }
+   
+       for (选择：本层集合中元素（树中节点孩子的数量就是集合的大小）) {
+           处理节点;
+           backtracking(路径，选择列表); // 递归
+           回溯，撤销处理结果
+       }
+   }
+   ```
+
+### 2. 组合
+
+1. **组合**
+
+   按照回溯模版完成。
+
+   - 函数：void backtracking(n, k , startIndex)
+
+   - 终止条件：path.size()==k
+
+   - 回溯逻辑：取数、递归、回溯
+
+     ```c++
+     for (int i = startIndex; i <= n; i++) {
+         path.push_back(i);
+         backtracking(n, k, i + 1);
+         path.pop_back();
+     }
+     ```
+
+   - 剪枝：` i <= n - (k - path.size()) + 1`
+
+   <img src="./Note.assets/20201123195223940.png" alt="77.组合" style="zoom: 50%;" />
+
+2. **组合总和III**
+
+   - 函数：void backtracking(n, targetSum , startIndex,sum)
+
+   - 终止条件：path.size() == k && sum == targetSum
+
+   - 回溯逻辑：取数、递归、回溯
+
+     ```c++
+     for (int i = startIndex; i <= 9 - (k - path.size()) + 1; i++) {
+         path.push_back(i);
+         sum += i;
+         backtracking(k, targetSum, i + 1, sum);
+         path.pop_back();
+         sum -= i;
+     }
+     ```
+
+   - 剪枝：` i <= n - (k - path.size()) + 1 && if (sum > targetSum)  return;`
+
+     <img src="./Note.assets/20201123195717975.png" alt="216.组合总和III" style="zoom: 50%;" />
+
+3. **电话号码的字母组合**
+
+   
+
+4. **组合总和**
+
+   
+
+5. **组合总和II**
+
+   
+
+   
+
+
+
+<img src="./Note.assets/20210219192050666.png" alt="回溯算法大纲" style="zoom: 50%;" />
