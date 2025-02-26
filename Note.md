@@ -762,18 +762,113 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
 3. **电话号码的字母组合**
 
-   
+   - 先做映射
+
+     ```c++
+     const string letterMap[10] = {
+         "",     // 0
+         "",     // 1
+         "abc",  // 2
+         "def",  // 3
+         "ghi",  // 4
+         "jkl",  // 5
+         "mno",  // 6
+         "pqrs", // 7
+         "tuv",  // 8
+         "wxyz", // 9
+     };
+     ```
+
+   - 函数：`void backtracking(string& digits, int index)` // index 表示本层在处理输入字符串的第几个数字
+
+   - 终止条件：`if (index == digits.size())` //处理完字符串中的最后一个数字后，结束
+
+   - 回溯逻辑：取数、递归、回溯
+
+     ```c++
+         int digit = digits[index] - '0';  // 当前取到的数字
+         string letter = letterMap[digit]; // 数字对应的字母集合
+         for (int i = 0; i < letter.size(); i++) {
+             ans.push_back(letter[i]);
+             backtracking(digits, index + 1);
+             ans.pop_back();
+         }
+     ```
+
+     <img src="./Note.assets/20201123200304469.png" alt="17. 电话号码的字母组合" style="zoom: 67%;" />
 
 4. **组合总和**
 
-   
+   - 函数：`void backtracking(const vector<int>& candidates, int targetSum, int sum, int startIndex)`
+
+   - 终止条件：`sum > targetSum 返回; sum == targetSum 收获`
+
+   - 回溯逻辑：取数、递归、回溯
+
+   - 优化：先排序candidate，然后`sum + candidates[i] <= target`放到for循环的判断条件里
+
+     ```c++
+     for (int i = startIndex; i < candidates.size() && sum + candidates[i] <= targetSum; i++) {
+         sum += candidates[i];
+         path.push_back(candidates[i]);
+         backtracking(candidates, targetSum, sum, i); // 注意：这里应该传入i，所以才能重复取当前元素
+         sum -= candidates[i];
+         path.pop_back();
+     }
+     ```
+
+     <img src="./Note.assets/20201223170730367.png" alt="39.组合总和" style="zoom:67%;" />
 
 5. **组合总和II**
 
-   
+   - 难点：**集合（数组candidates）有重复元素，但还不能有重复的组合**
+
+     如下，因为在树层上重复，就会出现两次[1,2]
+
+     ```c++
+     // 去重逻辑：i>startIndex 表明在同一树层第二个元素开始，然后如果树层重复，就不需要进入递归
+     if (i > startIndex && candidates[i] == candidates[i - 1]) {
+         continue;
+     }
+     ```
+
+     <img src="./Note.assets/20230310000918.png" alt="40.组合总和II" style="zoom:67%;" />
 
    
 
+### 3. 分割
 
+1. **分割出回文串**
+
+   - 函数：`void backtracking(const string& s, int startIndex)`
+   - 终止条件：`if (startIndex == s.size())`// 遍历到字符串的最后一个字母
+   - 回溯逻辑：如果是回文子串，则放入path，然后进入递归，否则continue进入下一个循环
+   - 判断回文子串的逻辑：从起始和终点，同时向内遍历，如果不相等则return false
+
+   <img src="./Note.assets/131.分割回文串.jpg" alt="131.分割回文串" style="zoom:67%;" />
+
+2. **复原IP地址**
+
+   - 函数：`void backtracking(string& s, int startIndex, int times)`
+   - 终止条件：`if (times == 4)`  // 用times表示进行到第几个循环，进入第四个循环就return
+   - 回溯逻辑：取数、递归、回溯
+   - 判断当前字段是否合法：
+     - 段位以0为开头的数字不合法
+     - 段位里有非正整数字符不合法
+     - 段位如果大于255了不合法
+
+   <img src="./Note.assets/20201123203735933.png" alt="93.复原IP地址" style="zoom:67%;" />
+
+   
+
+### 4. 排列
+
+1. **全排列**
+
+   
+
+2. **全排列II**
+
+   
 
 <img src="./Note.assets/20210219192050666.png" alt="回溯算法大纲" style="zoom: 50%;" />
