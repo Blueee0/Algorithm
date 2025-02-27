@@ -7,6 +7,11 @@
         "vector": "cpp",
         "xlocinfo": "cpp",
         "algorithm": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "atomic": "cpp",
+        "ios": "cpp",
+        "system_error": "cpp",
+        "xiosbase": "cpp",
+        "format": "cpp"
     }
 }

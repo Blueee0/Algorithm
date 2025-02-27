@@ -861,14 +861,83 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    
 
-### 4. 排列
+### 4. 子集
+
+1. **子集**
+
+   - 难点：什么时候收获结果？——**遍历这个树的时候，把所有节点都记录下来，就是要求的子集集合**——每层递归都收获
+
+     <img src="./Note.assets/78.子集.png" alt="78.子集" style="zoom:67%;" />
+
+2. **子集II**
+
+   - 难点：去重！和**组合总和II**的思路一致，注意先排序，后去重。这里不重复
+
+     <img src="./Note.assets/20201124195411977.png" alt="90.子集II" style="zoom:67%;" />
+
+3. **非递减子序列**
+
+   - 难点：**不等同于子集II**，不可以按照上述逻辑去重（先排序后去重），因为：子序列是从给定序列中抽取，**不改变元素相对顺序**
+
+   - 去重：同一树层去重
+
+     ```c++
+     unordered_set<int> uset; // 使用set对本层元素进行去重
+     for (int i = startIndex; i < nums.size(); i++) {
+         if ((!path.empty() && nums[i] < path.back()) || uset.find(nums[i]) != uset.end()) {
+             // 1.当path不为空时，若读取元素小于path结尾（不构成非递减），则不需要进入递归
+             // 2.若发现当前取的数在本树层已经被用过，不进入递归
+             continue;
+         }
+         uset.insert(nums[i]); // 记录元素被使用过
+         path.push_back(nums[i]);
+         backtracking(nums, i + 1);
+         path.pop_back();
+     }
+     ```
+
+     <img src="./Note.assets/20201124200229824.png" alt="491. 递增子序列1" style="zoom:67%;" />
+
+### 5. 排列
 
 1. **全排列**
 
-   
+   - 需要用**used数组**来标记什么元素使用过了；由于是排列，所以不需要startIndex来选择下一个数了。
+
+   - 函数：`void backtracking(vector<int>& nums, vector<bool>& used)`
+
+   - 终止条件：`if (path.size() == nums.size())`
+
+   - 回溯逻辑：取数、递归、回溯
+
+     ```c++
+     for (int i = 0; i < nums.size(); i++) {
+         if (used[i] == true)
+             continue; // path里已经收录的元素，直接跳过
+         used[i] = true;
+         path.push_back(nums[i]);
+         backtracking(nums, used);
+         path.pop_back();
+         used[i] = false;
+     }
+     ```
+
+
+   <img src="./Note.assets/20240803180318.png" alt="全排列" style="zoom:67%;" />
 
 2. **全排列II**
 
    
 
-<img src="./Note.assets/20210219192050666.png" alt="回溯算法大纲" style="zoom: 50%;" />
+### 6. 棋盘问题
+
+1. **N皇后**
+
+   
+
+2. **解数独**
+
+
+
+其他：**重新安排行程**
+
