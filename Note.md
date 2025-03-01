@@ -904,12 +904,14 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    - 需要用**used数组**来标记什么元素使用过了；由于是排列，所以不需要startIndex来选择下一个数了。
 
+     - 注意初始化：`vector<bool> used(nums.size(), false)`
+
    - 函数：`void backtracking(vector<int>& nums, vector<bool>& used)`
 
    - 终止条件：`if (path.size() == nums.size())`
 
-   - 回溯逻辑：取数、递归、回溯
-
+   - 回溯逻辑：取数、递归、回溯（**不需要考虑i--，因为没有startIndex，每次i都是从0开始，只需要跳过 used[i] 即可**）
+   
      ```c++
      for (int i = 0; i < nums.size(); i++) {
          if (used[i] == true)
@@ -921,23 +923,189 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
          used[i] = false;
      }
      ```
-
-
-   <img src="./Note.assets/20240803180318.png" alt="全排列" style="zoom:67%;" />
+   
+     <img src="./Note.assets/20240803180318.png" alt="全排列" style="zoom:67%;" />
 
 2. **全排列II**
 
+   - **难点：去重**（先排序，然后用used数组在树层上去重。注意：**对used数组到底是true还是false的判断**）
    
+     <img src="./Note.assets/20201124201331223.png" alt="47.全排列II1" style="zoom:67%;" />
+   
+     ```c++
+     for (int i = 0; i < nums.size(); i++) {
+         // used[i - 1] == true，说明同一树枝nums[i - 1]使用过
+         // used[i - 1] == false，说明同一树层nums[i - 1]使用过
+         if (i > 0 && nums[i] == nums[i - 1] && used[i - 1] == false) {
+             continue;
+         }
+         if (used[i] == false) {
+             used[i] = true;
+             path.push_back(nums[i]);
+             backtracking(nums, used);
+             path.pop_back();
+             used[i] = false;
+         }
+     ```
 
 ### 6. 棋盘问题
 
 1. **N皇后**
 
-   
+   - 函数：用row记录当前遍历到第几行，并且传入chessboard，跟着每一次递归和isValid变化。
+
+     -  `void backtracking(int n, int row, vector<string>& chessboard)`
+
+   - 终止条件：遍历到棋盘的最后一行，即`if (row == n)`
+
+   - 判断放置是否有效：
+
+     ```c++
+     bool isValid(int row, int col, int n, vector<string>& chessboard) {
+     // 同行不能有皇后
+     // 不用检查。因为每次回溯，选择同一行的不同元素
+     
+     // 同列不能有皇后
+     for (int i = 0; i < row; i++) {
+         if (chessboard[i][col] == 'Q')
+             return false;
+     }
+     
+     // 斜对角不能有皇后
+     // 检查 45度角是否有皇后（右上）
+     for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+         if (chessboard[i][j] == 'Q') {
+             return false;
+         }
+     }
+     // 检查 135度角是否有皇后（左上）
+     for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+         if (chessboard[i][j] == 'Q') {
+             return false;
+         }
+     }
+     
+     return true;
+     }
+     ```
+
+   - 回溯逻辑：
+
+     ```c++
+     for (int i = 0; i < n; i++) {
+         if (isValid(row, i, n, chessboard)) {
+             chessboard[row][i] = 'Q';
+             backtracking(n, row + 1, chessboard);
+             chessboard[row][i] = '.';
+         }
+     }
+     ```
+
+     <img src="./Note.assets/20210130182532303.jpg" alt="51.N皇后" style="zoom:67%;" />
+
+     
 
 2. **解数独**
 
+   - 难点：在判断是否有效的时候，**需要行和列的二维数据**。
+
+   - 函数：用bool类型，只要找到单个结果就立刻返回
+
+     -  `bool backtracking(vector<vector<char>>& board)`
+
+   - 终止条件：不需要，如果完全不行，直接return false
+
+   - 判断放置是否有效：
+
+     ```c++
+     bool isValid(int row, int col, char val, vector<vector<char>>& board) {
+         for (int i = 0; i < 9; i++) { // 判断行里是否重复
+             if (board[row][i] == val) {
+                 return false;
+             }
+         }
+         for (int j = 0; j < 9; j++) { // 判断列里是否重复
+             if (board[j][col] == val) {
+                 return false;
+             }
+         }
+         int startRow = (row / 3) * 3;
+         int startCol = (col / 3) * 3;
+         for (int i = startRow; i < startRow + 3; i++) { // 判断9方格里是否重复
+             for (int j = startCol; j < startCol + 3; j++) {
+                 if (board[i][j] == val) {
+                     return false;
+                 }
+             }
+         }
+         return true;
+     }
+     ```
+
+   - 回溯逻辑：
+
+     ```c++
+     for (int i = 0; i < board.size(); i++) {        // 遍历行
+         for (int j = 0; j < board[0].size(); j++) { // 遍历列
+             if (board[i][j] == '.') {
+                 for (char k = '1'; k <= '9'; k++) {
+                     if (isValid(i, j, k, board)) {
+                         board[i][j] = k;
+                         if (backtracking(board)) {
+                             return true;
+                         }
+                         board[i][j] = '.';
+                     }
+                 }
+                 return false;
+             }
+         }
+     }
+     ```
+
+     ![37.解数独](./Note.assets/2020111720451790-20230310131816104.png)
+
+   
+
+### **难题：重新安排行程**
+
+- **问题分析**
+
+  - **如何记录映射关系**？——出发机场映射多个到达机场：`unordered_map<出发机场, map<到达机场, 航班次数>> targets`
+
+    - 在遍历过程中，**可以使用"航班次数"这个字段的数字做相应的增减，来标记到达机场是否使用过了。**
+
+      如果“航班次数”大于零，说明目的地还可以飞，如果“航班次数”等于零说明目的地不能飞了，而不用对集合做删除元素或者增加元素的操作。
+
+  - **如何使用回溯法遍历？**
+
+    - 函数：使用bool的回溯函数，因为找到叶子结点即返回；ticketNum，表示共有多少个航班（终止条件）
+
+      `bool backtracking(int ticketNum, vector<string>& result)`
+
+    - 终止条件：result大小=航班总数+1
+
+      `if (result.size() == ticketNum + 1)`
+
+    - 回溯逻辑：
+
+      ```c++
+      for (pair<const string, int>& target :  targets[result[result.size() - 1]]) {
+          if (target.second > 0) { // 记录到达机场是否飞过了
+              result.push_back(target.first);
+              target.second--;
+              if (backtracking(ticketNum, result))
+                  return true;
+              result.pop_back();
+              target.second++;
+          }
+      }
+      ```
+
+      <img src="./Note.assets/2020111518065555-20230310121223600.png" alt="332.重新安排行程1" style="zoom:67%;" />
 
 
-其他：**重新安排行程**
 
+## 贪心算法
+
+### 1. 基础理论
