@@ -12,6 +12,7 @@
         "ios": "cpp",
         "system_error": "cpp",
         "xiosbase": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "iostream": "cpp"
     }
 }
