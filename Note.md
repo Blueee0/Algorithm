@@ -2684,21 +2684,149 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
                 int nexty = cury + dir[i][1];
                 if (nextx < 0 || nextx >= grid.size() || nexty < 0 || nexty >= grid[0].size()) 
                     continue;  // 坐标越界了，直接跳过
-                if (!visited[nextx][nexty]) { // 如果节点没被访问过
-                    que.push({nextx, nexty});  // 队列添加该节点为下一轮要遍历的节点
+                if (!visited[nextx][nexty]) {     // 如果节点没被访问过
+                    que.push({nextx, nexty});     // 队列添加该节点为下一轮要遍历的节点
                     visited[nextx][nexty] = true; // 只要加入队列立刻标记，避免重复访问
                 }
             }
         }
-    
     }
     ```
-
     
+
 
 ### 2. 深搜与广搜（岛屿问题）
 
-1. 
+1. **岛屿数量**
+
+   - **题意**：给定一个由 1（陆地）和 0（水）组成的矩阵，你需要计算岛屿的数量。岛屿由水平方向或垂直方向上相邻的陆地连接而成，并且四周都是水域。如图，有三座岛屿
+
+     <img src="./Note.assets/20240411153209_67737.png" alt="img" style="zoom: 50%;" />
+
+   - **DFS思路**
+
+     - 遇到一个没有遍历过的节点陆地，计数器就加一，然后**使用dfs把该节点陆地所能遍历到的陆地都标记上**。在遇到标记过的陆地节点和海洋节点的时候直接跳过。
+
+       ```c++
+       #include <iostream>
+       #include <vector>
+       using namespace std;
+       
+       int dir[4][2] = {0, 1, 1, 0, 0, -1, -1, 0}; 
+       void dfs(const vector<vector<int>> &imap,vector<vector<bool>> &visited,int x,int y){
+           for(int i = 0; i < 4; i++){
+               int nextx = x + dir[i][0];
+               int nexty = y + dir[i][1];
+               if(nextx < 0 || nextx >= imap.size() || nexty < 0 || nexty >= imap[0].size())
+                   continue;
+               if(!visited[nextx][nexty] && imap[nextx][nexty] == 1){
+                   visited[nextx][nexty] = true;
+                   dfs(imap, visited, nextx, nexty);
+               }
+           }
+       }
+       
+       
+       int main() {
+           int n, m;
+           cin >> n >> m;
+           vector<vector<int>> imap(n, (vector<int>(m, 0)));
+           vector<vector<bool>> visited(n, (vector<bool>(m, false)));
+       
+           for (int i = 0; i < n; i++) {
+               for (int j = 0; j < m; j++) {
+                   cin >> imap[i][j];
+               }
+           }
+       
+           int result = 0;
+           for (int i = 0; i < n; i++) {
+               for (int j = 0; j < m; j++) {
+                   if (imap[i][j] == 1 && visited[i][j] == false) {
+                       result++;
+                       dfs(imap, visited, i, j);
+                   }
+               }
+           }
+       
+           cout << result << endl;
+           return 0;
+       }
+       ```
+
+   - **BFS思路**：
+
+     - 遇到一个没有遍历过的节点陆地，计数器就加一，然后**使用bfs把该节点陆地所能遍历到的陆地都标记上**。在遇到标记过的陆地节点和海洋节点的时候直接跳过。
+
+       ```c++
+       #include <iostream>
+       #include <vector>
+       #include <queue>
+       using namespace std;
+       
+       int dir[4][2] = {0, 1, 1, 0, 0, -1, -1, 0};
+       void bfs(const vector<vector<int>> &imap,vector<vector<bool>> &visited,int x,int y){
+           queue<pair<int, int>> que;
+           que.push({x, y});
+           visited[x][y] = true;
+       
+           while(!que.empty()){
+               pair<int, int> cur = que.front();
+               que.pop();
+       
+               int curx = cur.first;
+               int cury = cur.second;
+               for(int i = 0; i < 4; i++){
+                   int nextx = curx + dir[i][0];
+                   int nexty = cury + dir[i][1];
+                   if (nextx < 0 || nextx >= imap.size() || nexty < 0 || nexty >= imap[0].size()) 
+                       continue;
+                   if (!visited[nextx][nexty] && imap[nextx][nexty] == 1) {
+                       que.push({nextx, nexty});
+                       visited[nextx][nexty] = true;
+                   }
+               }
+           }
+       }
+       
+       
+       int main() {
+           int n, m;
+           cin >> n >> m;
+           vector<vector<int>> imap(n, (vector<int>(m, 0)));
+           vector<vector<bool>> visited(n, (vector<bool>(m, false)));
+       
+           for (int i = 0; i < n; i++) {
+               for (int j = 0; j < m; j++) {
+                   cin >> imap[i][j];
+               }
+           }
+       
+           int result = 0;
+           for (int i = 0; i < n; i++) {
+               for (int j = 0; j < m; j++) {
+                   if (imap[i][j] == 1 && visited[i][j] == false) {
+                       result++;
+                       bfs(imap, visited, i, j);
+                   }
+               }
+           }
+       
+           cout << result << endl;
+           return 0;
+       }
+       ```
+
+     
+
+2. **岛屿面积**
+
+   - **题意**：给定一个由 1（陆地）和 0（水）组成的矩阵，你需要计算每个岛屿的最大面积
+   - **思路**：cnt作为全局变量，使用`dfs/bfs`把该节点所能遍历到的陆地都标记上，同时计算最大cnt。在遇到标记过的陆地节点和海洋节点的时候直接跳过。
+
+   
+
+3.  
 
 
 

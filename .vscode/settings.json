@@ -14,6 +14,9 @@
         "xiosbase": "cpp",
         "format": "cpp",
         "iostream": "cpp",
-        "xlocale": "cpp"
-    }
+        "xlocale": "cpp",
+        "iterator": "cpp",
+        "xmemory": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
