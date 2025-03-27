@@ -2826,9 +2826,200 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
    
 
-3.  
+3. **孤岛的总面积**
 
+   - **题意**：给定一个由 1（陆地）和 0（水）组成的矩阵，你需要计算每个孤岛的总面积，**孤岛是那些位于矩阵内部、所有单元格都不接触边缘的岛屿。**
 
+   - **思路**：只要从周边找到陆地，然后通过`dfs`或者`bfs` 将周边靠陆地且相邻的陆地都变成海洋，然后再去重新遍历地图，统计此时还剩下的陆地就可以了。
+
+     <img src="./Note.assets/20220830104632.png" alt="img" style="zoom:50%;" />
+
+     ```c++
+     #include <iostream>
+     #include <vector>
+     using namespace std;
+     
+     int dir[4][2] = {0,1,1,0,0,-1,-1,0};
+     void dfs(vector<vector<int>>& imap, int x, int y){
+         imap[x][y] = 0;
+         for(int i = 0; i < 4; i++){
+             int nextx = x + dir[i][0];
+             int nexty = y + dir[i][1];
+             if(nextx < 0|| nextx >= imap.size()|| nexty < 0|| nexty >= imap[0].size())
+                 continue;
+             if (imap[nextx][nexty] == 0) 
+                 continue;
+             dfs(imap, nextx, nexty);
+         }
+     }
+     
+     int main(){
+         int n, m;
+         cin >> n >> m;
+     
+         vector<vector<int>> imap(n,vector<int>(m,0));
+     
+         for(int i = 0; i < n; i++){
+             for(int j = 0; j < m; j++){
+                 cin >> imap[i][j];
+             }
+         }
+     
+         // 从左边和右边 向中间遍历
+         for (int i = 0; i < n; i++) {
+             if (imap[i][0] == 1) 
+                 dfs(imap, i, 0);
+             if (imap[i][m - 1] == 1) 
+                 dfs(imap, i, m - 1);
+         }
+         
+         // 从上边和下边，向中间遍历
+         for (int j = 0; j < m; j++) {
+             if (imap[0][j] == 1) 
+                 dfs(imap, 0, j);
+             if (imap[n - 1][j] == 1) 
+                 dfs(imap, n - 1, j);
+         }
+     
+         int count = 0;
+         for (int i = 0; i < n; i++) {
+             for (int j = 0; j < m; j++) {
+                 if (imap[i][j] == 1) 
+                     count++;
+             }
+         }
+         cout << count << endl;
+     
+         return 0;
+     }
+     ```
+
+     
+
+4. **沉没孤岛**
+
+   - **题意**：给定一个由 1（陆地）和 0（水）组成的矩阵，你需要计算每个孤岛的总面积，**孤岛是那些位于矩阵内部、所有单元格都不接触边缘的岛屿。**
+
+   - **思路**：
+
+     - 步骤一：深搜或者广搜将地图周边的 1 （陆地）全部改成 2 （特殊标记）
+
+     - 步骤二：将水域中间 1 （陆地）全部改成 水域（0）
+
+     - 步骤三：将之前标记的 2 改为 1 （陆地）
+
+       ```c++
+       // 从左边和右边 向中间遍历
+       for (int i = 0; i < n; i++) {
+           if (imap[i][0] == 1) 
+               dfs(imap, i, 0);
+           if (imap[i][m - 1] == 1) 
+               dfs(imap, i, m - 1);
+       }
+       
+       // 从上边和下边，向中间遍历
+       for (int j = 0; j < m; j++) {
+           if (imap[0][j] == 1) 
+               dfs(imap, 0, j);
+           if (imap[n - 1][j] == 1) 
+               dfs(imap, n - 1, j);
+       }
+       
+       for (int i = 0; i < n; i++) {
+           for (int j = 0; j < m; j++) {
+               if (imap[i][j] == 1) 
+                   imap[i][j] = 0;
+               if (imap[i][j] == 2) 
+                   imap[i][j] = 1;
+           }
+       }
+       
+       for(int i = 0; i < n; i++){
+           for(int j = 0; j < m; j++){
+               cout << imap[i][j] << " ";
+           }
+           cout << endl;
+       }
+       ```
+
+     
+
+5. **水流问题** ***
+
+   - **题意**：现有一个 N × M 的矩阵，每个单元格包含一个数值，这个数值代表该位置的相对高度。矩阵的左边界和上边界被认为是第一组边界，而矩阵的右边界和下边界被视为第二组边界。矩阵模拟了一个地形，当雨水落在上面时，水会根据地形的倾斜向低处流动，但只能从较高或等高的地点流向较低或等高并且相邻（上下左右方向）的地点。我们的目标是确定那些单元格，从这些单元格出发的水可以达到第一组边界和第二组边界。
+
+     <img src="./Note.assets/20240517115816.png" alt="img" style="zoom:50%;" />
+
+   - **思路**：从第一组边界上的节点 逆流而上，将遍历过的节点都标记上；同样从第二组边界的边上节点逆流而上。然后**两方都标记过的节点就是既可以流向第一组边界也可以流向第二组边界的节点**。
+
+     <img src="./Note.assets/1743039781712.jpg" alt="1743039781712" style="zoom:50%;" />
+
+     ```c++
+     #include <iostream>
+     #include <vector>
+     using namespace std;
+     
+     int n, m;
+     int dir[4][2] = {0,1,1,0,0,-1,-1,0};
+     void dfs(vector<vector<int>>& imap, vector<vector<bool>>& visited, int x, int y){
+         if (visited[x][y]) 
+             return;
+     
+         visited[x][y] = true;
+         for(int i = 0; i < 4; i++){
+             int nextx = x + dir[i][0];
+             int nexty = y + dir[i][1];
+             if(nextx < 0|| nextx >= n|| nexty < 0|| nexty >= m)
+                 continue;
+             if (imap[x][y] > imap[nextx][nexty])    // 注意：这里是从低向高遍历
+                 continue;
+             dfs(imap, visited, nextx, nexty);
+         }
+     }
+     
+     int main(){
+         cin >> n >> m;
+     
+         vector<vector<int>> imap(n,vector<int>(m,0));
+     
+         for(int i = 0; i < n; i++){
+             for(int j = 0; j < m; j++){
+                 cin >> imap[i][j];
+             }
+         }
+     
+         // 标记从第一组边界上的节点出发，可以遍历的节点
+         vector<vector<bool>> firstBorder(n, vector<bool>(m, false));
+     
+         // 标记从第一组边界上的节点出发，可以遍历的节点
+         vector<vector<bool>> secondBorder(n, vector<bool>(m, false));
+     
+         // 从左边和右边 向中间遍历
+         for (int j = 0; j < m; j++) {
+             dfs (imap, firstBorder, 0, j);      // 遍历最上行，接触第一组边界
+             dfs (imap, secondBorder, n - 1, j); // 遍历最下行，接触第二组边界
+         }
+         
+         // 从上边和下边，向中间遍历
+         for (int i = 0; i < n; i++) {
+             dfs (imap, firstBorder, i, 0);      // 遍历最左列，接触第一组边界
+             dfs (imap, secondBorder, i, m - 1); // 遍历最右列，接触第二组边界
+         }
+     
+         for (int i = 0; i < n; i++) {
+             for (int j = 0; j < m; j++) {
+                 if (firstBorder[i][j] && secondBorder[i][j]) 
+                     cout << i << " " << j << endl;
+             }
+         }
+     
+         return 0;
+     }
+     ```
+
+     
+
+   
 
 ### 3. 并查集
 
