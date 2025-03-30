@@ -3017,8 +3017,248 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
      }
      ```
 
-     
 
+
+
+6. **建造最大岛屿** 
+
+   - **题意**：给定一个由 1（陆地）和 0（水）组成的矩阵，你最多可以将矩阵中的一格水变为一块陆地，在执行了此操作之后，矩阵中最大的岛屿面积是多少。
+   
+   - **思路**：
+     
+     - **第一步**：一次遍历地图，得出各个岛屿的面积，并做编号记录。**
+     
+       - **记录方式**：使用map记录，key为岛屿编号，value为岛屿面积
+     
+       - **终止条件**：访问过的节点 或者 遇到海水
+     
+       - **注意**：如果整张地图都是陆地，直接返回总面积
+     
+         ```c++
+         int dir[4][2] = {0, 1, 1, 0, 0, -1, -1, 0};
+         void dfs(vector<vector<int>>& imap, vector<vector<bool>>& visited, int x, int y, int mark){
+             // 终止条件：访问过的节点 或者 遇到海水
+             if(visited[x][y] || imap[x][y] == 0)
+                 return;
+             visited[x][y] = true;
+             imap[x][y] = mark;
+             count++;
+             for (int i = 0; i < 4; i++) {
+                 int nextx = x + dir[i][0];
+                 int nexty = y + dir[i][1];
+                 if (nextx < 0 || nextx >= n || nexty < 0 || nexty >= m) 
+                     continue;
+                 dfs(imap, visited, nextx, nexty, mark);
+             }
+         }
+         int main(){
+             cin >> n >> m;
+         
+             vector<vector<int>> imap(n, vector<int>(m, 0));
+             for(int i = 0; i < n; i++){
+                 for(int j = 0; j < m; j++){
+                     cin >> imap[i][j];
+                 }
+             }
+         
+             vector<vector<bool>> visited(n, vector<bool>(m, false)); // 标记访问过的点
+             unordered_map<int, int> imapNum;    // 用map来记录岛屿编号和对应的面积
+             int mark = 2;   // 记录每个岛屿的编号
+             bool isAllGrid = true;  // 标记是否整个地图都是陆地
+             for(int i = 0; i < n; i++){
+                 for(int j = 0; j < m; j++){
+                     if(imap[i][j] == 0)
+                         isAllGrid = false;
+                     if(!visited[i][j] && imap[i][j] == 1){
+                         count = 0;  // 初始化岛屿面积为0
+                         dfs(imap, visited, i, j, mark);
+                         imapNum[mark] = count;  // 记录岛屿面积
+                         mark++;
+                     }
+                 }
+             }
+         
+             // 如果都是陆地，返回全面积
+             if (isAllGrid) {
+                 cout << n * m << endl;
+                 return 0;
+             }
+         }
+         ```
+     
+         
+     
+     - **第二步**：再遍历地图，遍历0的方格（因为要将0变成1），并统计该1（由0变成的1）周边岛屿面积，将其相邻面积相加在一起，得到最大岛屿面积。
+     
+       - **注意**：在计算相邻岛屿面积时，需要检查相邻格子是否属于同一个岛屿
+     
+         ```c++
+         int result = 0; // 记录最终结果
+         unordered_set<int> visitedMap; // 标记访问过的岛屿
+         for(int i = 0; i < n; i++){
+             for(int j = 0; j < m; j++){
+                 count = 1;
+                 visitedMap.clear(); // 每次使用时，清空
+                 if(imap[i][j] == 0){
+                     for (int k = 0; k < 4; k++) {
+                         int neari = i + dir[k][0];
+                         int nearj = j + dir[k][1];
+                         if (neari < 0 || neari >= n || nearj < 0 || nearj >= m)
+                             continue;
+                         if (visitedMap.count(imap[neari][nearj])) 
+                             continue;
+                         // 把相邻四面的岛屿数量加起来
+                         count += imapNum[imap[neari][nearj]];
+                         visitedMap.insert(imap[neari][nearj]);
+                     }
+                 }
+                 result = max(result, count);
+             }
+         }
+         ```
+     
+         <img src="./Note.assets/20220829105644.png" alt="img" style="zoom:50%;" />
+     
+     
+     
+   
+   7. **岛屿的周长**
+   
+      - **题意**：你可以假设矩阵外均被水包围。在矩阵中恰好**拥有一个岛屿**，假设组成岛屿的陆地边长都为 1，请计算岛屿的周长。岛屿内部没有水域。
+   
+      - **思路**：遍历每一个节点，遇到岛屿则计算其上下左右的空格情况。
+   
+        - 该陆地周围的节点是水域：边长+1
+        - 该陆地周边的节点有出界：边长+1
+   
+        ```c++
+        int dir[4][2] = {0, 1, 1, 0, 0, -1, -1, 0};
+        int result = 0;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(imap[i][j] == 1){
+                    for(int k = 0; k < 4; k++){
+                        int nexti = i + dir[k][0];
+                        int nextj = j + dir[k][1];
+                        if(nexti < 0 || nexti >= n || nextj < 0 || nextj >= m){
+                            result++;
+                            continue;
+                        }
+                        if(imap[nexti][nextj] == 0){
+                            result++;
+                        }
+                    }
+                }
+            }
+        }
+        ```
+   
+        
+   
+   8. **字符串接龙**
+   
+      - **题意**：给你两个字符串 beginStr 和 endStr 和一个字典 strList，找到从 beginStr 到 endStr 的最短转换序列中的字符串数目。如果不存在这样的转换序列，返回 0。下图输出为4
+   
+        <img src="./Note.assets/20250317105155.png" alt="img" style="zoom: 50%;" />
+   
+      - **思路**：
+   
+        - 第一步建模，如果两个字符串之间可以通过改变一个字符相互转换，则在这两个节点之间存在一条边。
+        - 第二步使用BFS求最短路径
+   
+        ```c++
+        #include <iostream>
+        #include <vector>
+        #include <queue>
+        #include <unordered_map>
+        #include <unordered_set>
+        #include <string>
+        
+        using namespace std;
+        
+        // 判断两个字符串是否可以通过改变一个字符相互转换
+        bool canConvert(const string& str1, const string& str2) {
+            int diffCount = 0;
+            for (size_t i = 0; i < str1.size(); ++i) {
+                if (str1[i] != str2[i]) {
+                    ++diffCount;
+                }
+                if (diffCount > 1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        // 广度优先搜索
+        int bfs(const string& beginStr, const string& endStr, const unordered_map<string, vector<string>>& graph) {
+            queue<pair<string, int>> que;
+            unordered_set<string> visited;
+        
+            que.push({beginStr, 1}); // 初始步数为1
+            visited.insert(beginStr);
+        
+            while (!que.empty()) {
+                auto [curStr, step] = que.front();
+                que.pop();
+        
+                if (curStr == endStr) 
+                    return step; // 找到目标字符串，返回步数
+        
+                // 遍历当前字符串的所有邻居
+                if (graph.find(curStr) != graph.end()) {
+                    for (const string& nextStr : graph.at(curStr)) {
+                        if (!visited.count(nextStr)) {
+                            visited.insert(nextStr);
+                            que.push({nextStr, step + 1});
+                        }
+                    }
+                }
+            }
+            return 0; // 找不到路径
+        }
+        
+        int main() {
+            int n;
+            cin >> n;
+            string beginStr, endStr;
+            cin >> beginStr >> endStr; 
+            vector<string> strList(n);
+            for (int i = 0; i < n; i++) {
+                cin >> strList[i];
+            }
+        
+            // 构建图
+            unordered_map<string, vector<string>> graph;
+            for (int i = 0; i < n; i++) {
+                if (canConvert(beginStr, strList[i])) {
+                    graph[beginStr].push_back(strList[i]);
+                }
+                if (canConvert(strList[i], endStr)) {
+                    graph[strList[i]].push_back(endStr);
+                }
+        
+                for (int j = i + 1; j < n; j++) {
+                    // 注意：构建的是无向图
+                    if (canConvert(strList[i], strList[j])) {
+                        graph[strList[i]].push_back(strList[j]);
+                        graph[strList[j]].push_back(strList[i]);
+                    }
+                }
+            }
+        
+            // 调用 BFS 函数
+            int result = bfs(beginStr, endStr, graph);
+            cout << result << endl;
+        
+            return 0;
+        }
+        ```
+   
+        
+   
+   9. **有向图的完全可达性**
+   
    
 
 ### 3. 并查集

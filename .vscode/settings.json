@@ -16,7 +16,9 @@
         "iostream": "cpp",
         "xlocale": "cpp",
         "iterator": "cpp",
-        "xmemory": "cpp"
+        "xmemory": "cpp",
+        "xhash": "cpp",
+        "unordered_map": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
