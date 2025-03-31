@@ -2695,6 +2695,7 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
     
 
 
+
 ### 2. 深搜与广搜（岛屿问题）
 
 1. **岛屿数量**
@@ -3259,11 +3260,137 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
    
    9. **有向图的完全可达性**
    
+      - **题意**：给定一个有向图，包含 N 个节点，节点编号分别为 1，2，...，N。现从 1 号节点开始，如果可以从 1 号节点的边可以到达任何节点，则输出 1，否则输出 -1。
+   
+      - **思路**：
+   
+        - 第一步建模，使用**数组+链表**来表示图结构
+        - 第二步使用**DFS**求可达性`for(int i : keys)  dfs(graph, visited, i);`
+   
+        ```c++
+        #include <iostream>
+        #include <vector>
+        #include <list>
+        using namespace std;
+        
+        void dfs(const vector<list<int>>& graph, vector<bool>& visited, int key){
+            if(visited[key])
+                return;
+            visited[key] = true;
+            list<int> keys = graph[key];
+            for(int i : keys){
+                dfs(graph, visited, i);
+            }
+        
+        }
+        
+        int main(){
+            int n, k;
+            cin >> n >> k;
+        
+            // 使用邻接表读取graph
+            vector<list<int>> graph(n + 1); // 邻接表
+            for(int i = 0; i < k; i++){
+                int s, t;
+                cin >> s >> t;
+                graph[s].push_back(t);
+            }
+        
+            vector<bool> visited(n + 1, false); // 记录是否被访问过
+            dfs(graph, visited, 1);
+            for(int i = 1; i < n + 1; i++){
+                if(visited[i] == false){
+                    cout << -1 << endl;
+                    return 0;
+                }
+            }
+        
+            cout << 1 << endl;
+            return 0;
+        }
+        ```
+   
    
 
 ### 3. 并查集
 
+1. **理论基础**
 
+   - **功能**：
+
+     - 寻找根节点，函数：`find(int u)`，也就是判断这个节点的祖先节点是哪个
+     - 将两个节点接入到同一个集合，函数：`join(int u, int v)`，将两个节点连在同一个根节点上， **要分别对 u 和 v 寻根之后再进行关联。**
+     - 判断两个节点是否在同一个集合，函数：`isSame(int u, int v)`，就是判断两个节点是不是同一个根节点
+
+   - **代码实现**：
+
+     ```c++
+     int n = 1005; // n根据题目中节点数量而定，一般比节点数量大一点就好
+     vector<int> father = vector<int> (n, 0);
+     
+     // 并查集初始化
+     void init() {
+         for (int i = 0; i < n; ++i) {
+             father[i] = i;
+         }
+     }
+     
+     // 并查集里寻根的过程
+     int find(int u) {
+         if (u == father[u]) return u;
+         else return father[u] = find(father[u]); // 路径压缩
+         //else return find(father[u]);	// 无路径压缩：如果根不是自己，就根据数组下标一层一层向下找
+     }
+     
+     // 判断 u 和 v是否找到同一个根
+     bool isSame(int u, int v) {
+         u = find(u);
+         v = find(v);
+         return u == v;
+     }
+     
+     // 将v->u 这条边加入并查集
+     void join(int u, int v) {
+         u = find(u); // 寻找u的根
+         v = find(v); // 寻找v的根
+         if (u == v) return ; // 如果发现根相同，则说明在一个集合，不用两个节点相连直接返回
+         father[v] = u;
+     }
+     ```
+
+     
+
+2. **寻找存在的路径**
+
+   - **题意**：给定一个包含 n 个节点的无向图中，节点编号从 1 到 n （含 1 和 n ）。判断是否有一条从节点 source 出发到节点 destination 的路径存在。
+
+   - **思路**：模版题
+
+     ```c++
+     int main(){
+         int m, u, v, source, destination;
+         cin >> n >> m;
+         init();
+         for(int i = 0; i < m; i++){
+             cin >> u >> v;
+             join(u, v);
+         }
+     
+         cin >> source >> destination;
+         if (isSame(source, destination)) 
+             cout << 1 << endl;
+         else 
+             cout << 0 << endl;
+     
+         return 0;
+     }
+     ```
+
+     
+
+3. **冗余路径**
+
+   
 
 ### 4. 最小生成树
 
