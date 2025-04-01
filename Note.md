@@ -3388,11 +3388,212 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
      
 
-3. **冗余路径**
+3. **冗余连接**
 
-   
+   - **题意**：有一个图，它是一棵树，他是拥有 n 个节点（节点编号1到n）和 n - 1 条边的连通无环无向图。现在在这棵树上的基础上，添加一条边（依然是n个节点，但有n条边），使这个图变成了有环图。先请你找出冗余边，删除后，使该图可以重新变成一棵树。
+
+   - **思路**：从前向后遍历每一条边（因为优先让前面的边连上），边的两个节点如果不在同一个集合，就加入集合（即：同一个根节点）。如果边的两个节点已经出现在同一个集合里，说明着边的两个节点已经连在一起了，再加入这条边一定就出现环了。
+
+     <img src="./Note.assets/20230604104330.png" alt="img" style="zoom:50%;" />
+
+     ```c++
+     int main(){
+         int s, t;
+         cin >> n;
+         init();
+         for(int i = 0; i < n; i++){
+             cin >> s >> t;
+             if (isSame(s, t)) {
+                 cout << s << " " << t << endl;
+                 return 0;
+             } else {
+                 join(s, t);
+             }
+         }
+         return 0;
+     }
+     ```
+
+     
+
+4. **冗余连接II*****
+
+   - **题意**：删除有向图的一条边，变成有向树
+
+     <img src="./Note.assets/20250326162836.png" alt="img" style="zoom: 67%;" />
+
+   - **思路**：有向树的性质（只有**根节点入度为0**，其他**节点入度都为1**）
+
+     - 出现入度为2的点，随便删除一条指向该节点的边（1-3或2-3）
+
+       <img src="./Note.assets/20240527115807.png" alt="img" style="zoom: 67%;" />
+
+     - 出现入度为2的点，只能删特定的一条边（1-3）
+
+       <img src="./Note.assets/20240527151456.png" alt="img" style="zoom:67%;" />
+
+     - 全部都没有入度为2的点，但是图中出现有向环
+
+       <img src="./Note.assets/20240527120531.png" alt="img" style="zoom:67%;" />
+
+   - **代码**
+
+     - **第一步**：把每条边记录下来，并统计节点入度
+
+       ```c++
+       int s, t;
+       vector<vector<int>> edges;
+       cin >> n;
+       vector<int> inDegree(n + 1, 0); // 记录节点入度
+       for (int i = 0; i < n; i++) {
+           cin >> s >> t;
+           inDegree[t]++;
+           edges.push_back({s, t});
+       }
+       ```
+
+     - **第二步**：对于入度为2的情况，删除指向入度为2的节点的两条边其中的一条，如果删了一条，判断这个图是一个树，那么这条边就是答案。
+
+       ```c++
+       vector<int> vec; // 记录入度为2的边（如果有的话就两条边）
+       // 找入度为2的节点所对应的边，注意要倒序，因为优先删除最后出现的一条边
+       for (int i = n - 1; i >= 0; i--) {
+           if (inDegree[edges[i][1]] == 2) {
+               vec.push_back(i);
+           }
+       }
+       if (vec.size() > 0) {
+           // 放在vec里的边已经按照倒叙放的，所以这里就优先删vec[0]这条边
+           if (isTreeAfterRemoveEdge(edges, vec[0])) {
+               cout << edges[vec[0]][0] << " " << edges[vec[0]][1];
+           } else {
+               cout << edges[vec[1]][0] << " " << edges[vec[1]][1];
+           }
+           return 0;
+       }
+       ```
+
+       **`isTreeAfterRemoveEdge()` 判断删一个边之后是不是有向树**： 
+
+       将所有边的两端节点分别加入并查集，遇到要删除的边则跳过；如果遇到即将加入并查集的边的两端节点，本来就在并查集了，说明构成了环；如果顺利将所有边的两端节点（除了要删除的边）加入了并查集，则说明删除该条边还是一个有向树。
+
+       ```c++
+       // 删一条边之后判断是不是树
+       bool isTreeAfterRemoveEdge(const vector<vector<int>>& edges, int deleteEdge) {
+           init(); // 初始化并查集
+           for (int i = 0; i < n; i++) {
+               if (i == deleteEdge) 
+                   continue;
+               if (isSame(edges[i][0], edges[i][1])) { // 构成有向环了，一定不是树
+                   return false;
+               }
+               join(edges[i][0], edges[i][1]);
+           }
+           return true;
+       }
+       ```
+
+     - **第三步**：明确没有入度为2的情况，那么一定有向环，找到构成环的边就是要删除的边。
+
+       **`getRemoveEdge()`找到有向环中需要删除的那条边**
+
+        将所有边的两端节点分别加入并查集，如果遇到即将加入并查集的边的两端节点本来就在并查集了，说明构成了环。
+
+       ```c++
+       // 在有向图里找到删除的那条边，使其变成树
+       void getRemoveEdge(const vector<vector<int>>& edges) {
+           init(); // 初始化并查集
+           for (int i = 0; i < n; i++) { // 遍历所有的边
+               if (isSame(edges[i][0], edges[i][1])) { // 构成有向环了，就是要删除的边
+                   cout << edges[i][0] << " " << edges[i][1];
+                   return;
+               } else {
+                   join(edges[i][0], edges[i][1]);
+               }
+           }
+       }
+       ```
+
+     
+
+
 
 ### 4. 最小生成树
+
+**题意**：给定一张地图（无向图），其中包括了所有的岛屿，以及它们之间的距离。如何可以以最短的总公路距离将所有岛屿联通起来。-> 最小生成树
+
+图中有n个节点，那么一定可以用n-1条边将所有节点连接到一起，最小生成树算法就是如何选择这n-1条边。
+
+<img src="./Note.assets/20231206164306.png" alt="img" style="zoom: 50%;" />
+
+#### **prim**
+
+- **prim三部曲**
+
+  - 第一步，选距离生成树最近节点
+  - 第二步，最近节点加入生成树
+  - 第三步，更新非生成树节点到生成树的距离（即更新`minDist`数组）
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <climits>
+  using namespace std;
+  
+  int main(){
+      int v, e;
+      int x, y, k;
+      cin >> v >> e;
+      vector<vector<int>> imap(v + 1, vector<int>(v + 1, 10001));
+      while(e--){
+          cin >> x >> y >> k;
+          imap[x][y] = k;
+          imap[y][x] = k;
+      }
+  
+      vector<int> minDist(v + 1, 10001);
+      vector<bool> isInTree(v + 1, false);
+  
+      for(int i = 1; i < v; i++){
+  
+          // 第一步：选距离生成树最近节点
+          int cur = -1;
+          int minVal = INT_MAX;
+          for (int j = 1; j <= v; j++) {
+              if(!isInTree[j] && minDist[j] < minVal){
+                  minVal = minDist[j];
+                  cur = j;
+              }
+          }
+  
+          // 第二步：最近节点（cur）加入生成树
+          isInTree[cur] = true;
+  
+          // 第三步：更新非生成树节点到生成树的距离（即更新minDist数组）
+          for(int j = 1; j <= v; j++){
+              if(!isInTree[j] && imap[cur][j] < minDist[j]){
+                  minDist[j] = imap[cur][j];
+              }
+          }
+  
+      }
+  
+      // 统计结果
+      int result = 0;
+      for (int i = 2; i <= v; i++) {
+          result += minDist[i];
+      }
+      cout << result << endl;
+  
+      return 0;
+  }
+  ```
+
+  
+
+#### **kruskal**
+
+
 
 
 
