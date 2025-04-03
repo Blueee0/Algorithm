@@ -3530,6 +3530,8 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
 - **prim三部曲**
 
+- Prim 算法 时间复杂度为 O(n^2)，其中 n 为节点数量，它的运行效率和图中边树无关，适用稠密图。
+
   - 第一步，选距离生成树最近节点
   - 第二步，最近节点加入生成树
   - 第三步，更新非生成树节点到生成树的距离（即更新`minDist`数组）
@@ -3593,21 +3595,297 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
 #### **kruskal**
 
+- **思路**：
 
+- Kruskal算法 时间复杂度 为 nlogn，其中n 为边的数量，适用稀疏图。
 
+  - 边的权值排序，因为要优先选最小的边加入到生成树里
+  - 遍历排序后的边
+    - 如果边首尾的两个节点在同一个集合，说明如果连上这条边图中会出现环
+    - 如果边首尾的两个节点不在同一个集合，加入到最小生成树，并把两个节点加入同一个集合
 
+  ```c++
+  // l,r为 边两边的节点，val为边的数值
+  struct Edge {
+      int l, r, val;
+  };
+  
+  int main(){
+  
+      int v, e;
+      int v1, v2, val;
+      vector<Edge> edges;
+      cin >> v >> e;
+      while (e--) {
+          cin >> v1 >> v2 >> val;
+          edges.push_back({v1, v2, val});
+      }
+  
+      // 按边的权值对边进行从小到大排序
+      sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {
+          return a.val < b.val;
+      });
+  
+      init();
+      int result_val = 0;
+      for (Edge edge : edges) {
+          int x = find(edge.l);
+          int y = find(edge.r);
+          if (x != y) {
+              result_val += edge.val;
+              join(x, y);
+          }
+      }
+      cout << result_val << endl;
+      return 0;
+  }
+  ```
+
+  
 
 ### 5. 拓扑排序
 
+- **理论**：给出一个 有向图，把这个**有向图转成线性**的排序 就叫拓扑排序；也是图论中**判断有向无环图**的常用方法
 
+- **实现**：卡恩算法（BFS）
+
+- **思路**：
+
+  - 找到入度为0 的节点，加入结果集
+  - 将该节点从图中移除
+
+- **判断有向无环图**？
+
+  - 节点1、2、3、4 形成了环，找不到入度为0 的节点了，所以此时结果集里只有一个元素。
+
+    说明，如果结果集元素个数 不等于 图中节点个数，我们就可以认定图中一定有 有向环！
+
+    <img src="./Note.assets/20240510115115.png" alt="img" style="zoom:67%;" />
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <queue>
+  #include <unordered_map>
+  using namespace std;
+  
+  int main(){
+      int m, n, s, t;
+      cin >> n >> m;
+      vector<int> inDegree(n, 0); // 记录入度
+      vector<int> result; // 记录结果
+      unordered_map<int, vector<int>> umap; // 记录文件依赖关系
+  
+      while(m--){
+          cin >> s >> t;
+          inDegree[t]++;
+          umap[s].push_back(t);
+      }
+  
+      // 初始化存储入度为0的点
+      queue<int> que;
+      for (int i = 0; i < n; i++) {
+          if (inDegree[i] == 0) 
+              que.push(i);
+      }
+  
+      // 记录结果
+      while (que.size()) {
+          int cur = que.front();
+          que.pop();
+          result.push_back(cur);
+  
+          // 将该节点从图中移除：该节点作为出发点所连接的节点的 入度 减一
+          vector<int> files = umap[cur];
+          if (files.size()) { 
+              for (int i = 0; i < files.size(); i++) {
+                  inDegree[files[i]] --; // cur指向的节点入度都做减一操作
+                  // 如果指向的节点减一之后，入度为0，说明是要选取的下一个节点，放入队列。
+                  if(inDegree[files[i]] == 0) 
+                      que.push(files[i]); 
+              }
+          }
+      }
+  
+      if (result.size() == n) {
+          for (int i = 0; i < n - 1; i++) 
+              cout << result[i] << " ";
+          cout << result[n - 1];
+      } else 
+          cout << -1 << endl;
+  
+      return 0;
+  }
+  ```
+
+  
 
 ### 6. 最短路算法
 
 #### dijkstra
 
+不能解决**负权值**问题
+
+- **思路**
+
+  - 第一步，选源点到哪个节点近且该节点未被访问过
+  - 第二步，该最近节点被标记访问过
+  - 第三步，更新**非访问节点到源点**的距离（即更新minDist数组）
+
+  
+
+- **朴素版**（该解法的时间复杂度为 O(n^2)，n为节点数量）
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <climits>
+  using namespace std;
+  
+  int main(){
+  
+      int n, m, s, e, val;
+      cin >> n >> m;
+      vector<vector<int>> grid(n + 1, vector<int>(n + 1, INT_MAX));
+      while(m--){
+          cin >> s >> e >> val;
+          grid[s][e] = val;
+      }
+      int start = 1, end = n;
+      
+      // 记录非访问节点到源点的距离
+      vector<int> minDist(n + 1, INT_MAX);
+      minDist[start] = 0;
+  
+      // 记录访问过的节点
+      vector<bool> visited(n + 1, false);
+      
+      // 遍历所有节点
+      for(int i = 1; i <= n; i++){
+          // 第一步，选源点到哪个节点近且该节点未被访问过
+          int minVal = INT_MAX;
+          int cur = 1;
+          for (int j = 1; j <= n; j++){
+              if(!visited[j] && minDist[j] < minVal){
+                  minVal = minDist[j];
+                  cur = j;
+              }
+          }
+  
+          // 第二步，该最近节点被标记访问过
+          visited[cur] = true;
+  
+  
+          // 第三步，更新非访问节点到源点的距离（即更新minDist数组）
+          for(int j = 1; j <= n; j++){
+              if(!visited[j] && grid[cur][j] != INT_MAX && minDist[cur] + grid[cur][j] < minDist[j]){
+                  minDist[j] = minDist[cur] + grid[cur][j];
+              }
+          }
+      }
+      if (minDist[end] == INT_MAX)    // 不能到达终点
+          cout << -1 << endl; 
+      else 
+          cout << minDist[end] << endl; // 到达终点最短路径
+  
+  
+      return 0;
+  }
+  ```
+
+  
+
+- **堆优化版**（时间复杂度：O(ElogE) E 为边的数量；      空间复杂度：O(N + E) N 为节点的数量）
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <list>
+  #include <queue>
+  #include <climits>
+  using namespace std;
+   
+  // 小顶堆
+  class mycomparison {
+  public:
+      bool operator()(const pair<int, int>& lhs, const pair<int, int>& rhs) {
+          return lhs.second > rhs.second;
+      }
+  };
+  
+  // 定义一个结构体来表示带权重的边
+  struct Edge {
+      int to;  // 邻接顶点
+      int val; // 边的权重
+      Edge(int t, int w): to(t), val(w) {}  // 构造函数
+  };
+  
+  int main() {
+      int n, m, p1, p2, val;
+      cin >> n >> m;
+  
+      vector<list<Edge>> grid(n + 1);
+  
+      for(int i = 0; i < m; i++){
+          cin >> p1 >> p2 >> val; 
+          // p1 指向 p2，权值为 val
+          grid[p1].push_back(Edge(p2, val));
+  
+      }
+  
+      int start = 1;  // 起点
+      int end = n;    // 终点
+  
+      // 存储从源点到每个节点的最短距离
+      std::vector<int> minDist(n + 1, INT_MAX);
+  
+      // 记录顶点是否被访问过
+      std::vector<bool> visited(n + 1, false); 
+      
+      // 优先队列中存放 pair<节点，源点到该节点的权值>
+      priority_queue<pair<int, int>, vector<pair<int, int>>, mycomparison> pq;
+  
+  
+      // 初始化队列，源点到源点的距离为0，所以初始为0
+      pq.push(pair<int, int>(start, 0)); 
+      
+      minDist[start] = 0;  // 起始点到自身的距离为0
+  
+      while (!pq.empty()) {
+          // 1. 第一步，选源点到哪个节点近且该节点未被访问过 （通过优先级队列来实现）
+          // <节点， 源点到该节点的距离>
+          pair<int, int> cur = pq.top(); pq.pop();
+          if (visited[cur.first]) 
+              continue;
+  
+          // 2. 第二步，该最近节点被标记访问过
+          visited[cur.first] = true;
+  
+          // 3. 第三步，更新非访问节点到源点的距离（即更新minDist数组）
+          for (Edge edge : grid[cur.first]) { // 遍历cur指向的节点
+              // cur指向的节点edge.to，这条边的权值为 edge.val
+              if (!visited[edge.to] && minDist[cur.first] + edge.val < minDist[edge.to]) { // 更新minDist
+                  minDist[edge.to] = minDist[cur.first] + edge.val;
+                  pq.push(pair<int, int>(edge.to, minDist[edge.to]));
+              }
+          }
+  
+      }
+  
+      if (minDist[end] == INT_MAX) 
+          cout << -1 << endl; // 不能到达终点
+      else 
+          cout << minDist[end] << endl; // 到达终点最短路径
+  }
+  ```
+
+  
+
+#### Bellman_ford
 
 
 
+#### SPFA
 
 
 
