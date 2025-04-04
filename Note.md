@@ -3883,9 +3883,238 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
 #### Bellman_ford
 
+解决**负权值**问题
+
+- **核心思想**：对所有边进行**松弛**`n-1`次操作（n为节点数量），从而求得目标最短路。
+
+  - **松弛**：`minDist[B] = min(minDist[A] + value, minDist[B])`
+
+  - **为什么是`n-1`次**：对所有边松弛**一次**，相当于计算 起点到达 与起点**一条边**相连的节点 的最短距离
+
+    
+
+- **Bellman_ford算法**
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <list>
+  #include <climits>
+  using namespace std;
+  
+  int main(){
+      int n, m, s, t, val;
+      cin >> n >> m;
+      vector<vector<int>> umap; 
+      for(int i = 0; i < m; i++){
+          cin >> s >> t >> val;
+          umap.push_back({s, t, val});
+      }
+  
+      int start = 1, end = n;
+      vector<int> minDist(n + 1, INT_MAX);
+      minDist[start] = 0;
+      for(int i = 0; i < n - 1; i++){
+          for(vector<int> &side : umap){
+              int from = side[0];
+              int to = side[1];
+              int value = side[2];
+              // minDist[from] != INT_MAX 防止从未计算过的节点出发
+              if(minDist[from] != INT_MAX && minDist[to] > minDist[from] + value){
+                  minDist[to] = minDist[from] + value;
+              }
+          }
+      }
+  
+      if (minDist[end] == INT_MAX) 
+          cout << "unconnected" << endl; // 不能到达终点
+      else 
+          cout << minDist[end] << endl; // 到达终点最短路径长度
+  }
+  ```
+
+  
+
+- **Bellman_ford 队列优化算法（SPFA）**
+
+  不需要对所有边进行松弛，只需要对 **上一次松弛的时候更新过的节点作为出发节点所连接的边** 进行松弛就够了。
+
+  - SPFA 的时间复杂度为 `O(K * N)`，K 为不定值，节点需要计入几次队列取决于**图的稠密度** -> 图越稀疏，SPFA的效率就越高。
+  - SPFA 在最坏的情况下是 `O(N * E)`，但 一般情况下 时间复杂度为 `O(K * N)`。
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <queue>
+  #include <list>
+  #include <climits>
+  using namespace std;
+  
+  struct Edge { // 邻接表
+      int to;   // 链接的节点
+      int val;  // 边的权重
+  
+      Edge(int t, int w): to(t), val(w) {}  // 构造函数
+  };
+  
+  int main(){
+      int n, m, s, t, val;
+      cin >> n >> m;
+      vector<list<Edge>> umap(n + 1);
+      vector<bool> isInQueue(n + 1);
+  
+      for(int i = 0; i < m; i++){
+          cin >> s >> t >> val;
+          umap[s].push_back(Edge(t, val));
+      }
+  
+      int start = 1, end = n;
+      vector<int> minDist(n + 1, INT_MAX);
+      minDist[start] = 0;
+  
+      queue<int> que;
+      que.push(start);
+  
+      while(!que.empty()){
+          int node = que.front(); que.pop();
+          isInQueue[node] = false;
+          for(Edge edge : umap[node]){
+              int from = node;
+              int to = edge.to;
+              int value = edge.val;
+              if (minDist[to] > minDist[from] + value) {
+                  minDist[to] = minDist[from] + value; 
+                  // 已经在队列里的元素不用重复添加
+                  if (isInQueue[to] == false) { 
+                      que.push(to);
+                      isInQueue[to] = true;
+                  }
+              }
+          }
+      }
+  
+  
+      if (minDist[end] == INT_MAX) 
+          cout << "unconnected" << endl; // 不能到达终点
+      else 
+          cout << minDist[end] << endl; // 到达终点最短路径长度
+  }
+  ```
+
+  
+
+- **Bellman_ford之判断负权回路**
+
+  - **负权回路**：一系列道路的总权值为负，这样的回路使得通过反复经过回路中的道路，可以无限地减少总成本/增加总收益。
+
+    如果松弛 `n` 次，结果有变化了，说明存在负权回路，因为 有负权回路 就是可以无限最短路径（一直绕圈，就可以一直得到无限小的最短距离）。
+
+  - 时间复杂度：`O(N * E)` , N为节点数量，E为图中边的数量；空间复杂度： `O(N)` ，即 minDist 数组所开辟的空间
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <list>
+  #include <climits>
+  using namespace std;
+  
+  int main(){
+      int n, m, s, t, val;
+      cin >> n >> m;
+      vector<vector<int>> umap; 
+      for(int i = 0; i < m; i++){
+          cin >> s >> t >> val;
+          umap.push_back({s, t, val});
+      }
+  
+      int start = 1, end = n;
+      vector<int> minDist(n + 1, INT_MAX);
+      minDist[start] = 0;
+      bool flag = false;
+      for(int i = 1; i <= n; i++){
+          for(vector<int> &side : umap){
+              int from = side[0];
+              int to = side[1];
+              int value = side[2];
+              if (i < n) {
+                  if (minDist[from] != INT_MAX && minDist[to] > minDist[from] + value) minDist[to] = minDist[from] + value;
+              } else { // 多加一次松弛判断负权回路
+                  if (minDist[from] != INT_MAX && minDist[to] > minDist[from] + value) flag = true;
+              }
+          }
+      }
+  
+      if (flag) {
+          cout << "circle" << endl;
+      } else if (minDist[end] == INT_MAX) {
+          cout << "unconnected" << endl;
+      } else {
+          cout << minDist[end] << endl;
+      }
+  
+      return 0;
+  }
+  ```
+
+  
+
+- **bellman_ford之单源有限最短路**
+
+  - **单源有限最短路**：起点**最多经过`k`个点（`k + 1`条边）**到达终点的最短距离；本题中可能存在**负权回路**！
+    - 本题有负权回路=如果多做松弛，结果会改变。-->    每次计算` minDist `时候，要基于 **对所有边上一次松弛的` minDist `数值**
+    - 本题要求最多经过k个节点，对松弛次数是有限制的。          -->          最多松弛`k + 1`次
+
+  - 时间复杂度：`O(K * E)` ，K为至多经过K个节点，E为图中边的数量；空间复杂度： `O(N)` ，即 minDist 数组所开辟的空间
+
+  ```c++
+  #include <iostream>
+  #include <vector>
+  #include <list>
+  #include <climits>
+  using namespace std;
+  
+  int main(){
+      int n, m, s, t, val, src, dst, k;
+      cin >> n >> m;
+      vector<vector<int>> umap; 
+      for(int i = 0; i < m; i++){
+          cin >> s >> t >> val;
+          umap.push_back({s, t, val});
+      }
+      cin >> src >> dst >> k;
+  
+      vector<int> minDist(n + 1, INT_MAX);
+      vector<int> minDist_copy(n + 1, INT_MAX);
+      minDist[src] = 0;
+      for(int i = 0; i < k + 1; i++){
+          minDist_copy = minDist;
+          for(vector<int> &side : umap){
+              int from = side[0];
+              int to = side[1];
+              int value = side[2];
+              // minDist[from] != INT_MAX 防止从未计算过的节点出发
+              if(minDist_copy[from] != INT_MAX && minDist[to] > minDist_copy[from] + value){
+                  minDist[to] = minDist_copy[from] + value;
+              }
+          }
+      }
+  
+      if (minDist[dst] == INT_MAX) 
+          cout << "unreachable" << endl; // 不能到达终点
+      else 
+          cout << minDist[dst] << endl; // 到达终点最短路径长度
+  }
+  ```
 
 
-#### SPFA
+
+#### Floyd
+
+
+
+
+
+#### A*算法
 
 
 
