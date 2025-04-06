@@ -4110,13 +4110,174 @@ KMP的主要思想是**当出现字符串不匹配时，可以知道一部分之
 
 #### Floyd
 
+- **题意**：求多个起点到多个终点的多条最短路径
 
+- **思路**：Floyd 算法对边的权值正负没有要求，都可以处理。（核心思想：**动态规划**）
+
+- **步骤**：
+
+  - **确定dp数组含义**
+
+    - `grid[i][j][k] = m`，表示 节点`i` 到 节点`j` 以`[1...k]` 集合中的**节点`k`为中间节点**的最短距离为`m`。
+
+  - **确定递推公式**
+
+    - 节点`i`到 节点`j`的最短路径经过节点 `k`——> `grid[i][j][k] = grid[i][k][k - 1] + grid[k][j][k - 1]`
+    - 节点`i`到 节点`j`的最短路径不经过节点`k`——> `grid[i][j][k] = grid[i][j][k - 1]`
+    - `grid[i][j][k] = min(grid[i][k][k - 1] + grid[k][j][k - 1], grid[i][j][k - 1])`
+
+  - **初始化**
+
+    - 本题 节点0 是无意义的，节点是从1 到 n，所以初始化`grid[i][j][0]=val`，其他值初始化为最大值
+    - 例如：题目中输入边（节点2 -> 节点6，权值为3），那么`grid[2][6][0] = 3`
+
+  - **遍历顺序**
+
+    - 我们需要三个for循环，分别遍历i，j 和k。**最外层遍历`k`，然后`i`，`j`**
+
+      <img src="./Note.assets/20240424120109.png" alt="img" style="zoom:33%;" />
+
+  - **代码**：
+
+    ```c++
+    #include <iostream>
+    #include <vector>
+    #include <list>
+    using namespace std;
+    
+    int main(){
+        int n, m, u, v, val;
+        cin >> n >> m;
+    
+        vector<vector<vector<int>>> grid(n + 1, vector<vector<int>>(n + 1, vector<int>(n + 1, 10005)));  // 因为边的最大距离是10^4
+        for(int i = 0; i < m; i++){
+            cin >> u >> v >> val;
+            grid[u][v][0] = val;
+            grid[v][u][0] = val;
+        }
+    
+        // floyd
+        for(int k = 1; k <= n; k++){
+            for(int j = 1; j <= n; j++){
+                for(int i = 1; i <= n; i++){
+                    grid[i][j][k] = min(grid[i][k][k - 1] + grid[k][j][k - 1], grid[i][j][k - 1]);
+                }
+            }
+        }
+    
+        int q, start, end;
+        cin >> q;
+        while (q--) {
+            cin >> start >> end;
+            if (grid[start][end][n] == 10005) 
+                cout << -1 << endl;
+            else 
+                cout << grid[start][end][n] << endl;
+        }
+    
+        return 0;
+    }
+    ```
+
+    
 
 
 
 #### A*算法
 
+- **题意**：骑士只能走日字格，如何找到最短路径
+
+- **思路**：相对于 普通BFS，A * 算法只从 队列里取出 距离终点最近的节点。
+
+- **代码**：
+
+  ```c++
+  #include<iostream>
+  #include<queue>
+  #include<string.h>
+  using namespace std;
+  
+  // 日字格有八种走法
+  int dir[8][2]={-2,-1,-2,1,-1,2,1,2,2,1,2,-1,1,-2,-1,-2};    
+  int b1, b2; // 目标位置
+  int moves[1001][1001];  // 表示从起点到位置 (next.x, next.y) 的最小移动步数。
+  
+  // F = G + H
+  // G = 从起点到该节点路径消耗
+  // H = 该节点到终点的预估消耗
+  struct Knight{
+      int x,y;
+      int g,h,f;
+      bool operator < (const Knight & k) const{  // 重载运算符， 从小到大排序
+          return k.f < f;
+      }
+  };
+  
+  int Heuristic(const Knight& k) { // 欧拉距离：不开根号，提高精度
+      return (k.x - b1) * (k.x - b1) + (k.y - b2) * (k.y - b2);
+  }
+  
+  priority_queue<Knight> que;
+  void Astar(const Knight& k)
+  {
+      Knight cur, next;
+  	que.push(k);
+  	while(!que.empty()){
+  
+  		cur=que.top(); que.pop();
+  		if(cur.x == b1 && cur.y == b2)
+  		    break;  // 走到终点，退出
+  
+  		for(int i = 0; i < 8; i++){
+  
+  			next.x = cur.x + dir[i][0];
+  			next.y = cur.y + dir[i][1];
+  			if(next.x < 1 || next.x > 1000 || next.y < 1 || next.y > 1000)
+  			    continue;   // 越界了，跳过
+  			if(!moves[next.x][next.y]){ // 检查目标位置是否已经被访问过。为0，则未访问
+  				moves[next.x][next.y] = moves[cur.x][cur.y] + 1;
+                  // 开始计算F
+  				next.g = cur.g + 5; // 马走日，欧拉距离：1 * 1 + 2 * 2 = 5
+                  next.h = Heuristic(next);
+                  next.f = next.g + next.h;
+                  que.push(next);
+  			}
+  
+  		}
+  	}
+  }
+  
+  int main()
+  {
+      int n, a1, a2;
+      cin >> n;
+      while (n--) {
+          cin >> a1 >> a2 >> b1 >> b2;
+          memset(moves,0,sizeof(moves));
+          Knight start;
+          start.x = a1;
+          start.y = a2;
+          start.g = 0;
+          start.h = Heuristic(start);
+          start.f = start.g + start.h;
+  		Astar(start);
+          while(!que.empty()) 
+              que.pop(); // 队列清空
+  		cout << moves[b1][b2] << endl;
+  	}
+  	return 0;
+  }
+  ```
 
 
 
 
+#### 总结
+
+![img](./Note.assets/20240508121355.png)
+
+- 如果遇到**单源且边为正数**，直接Dijkstra（堆优化版）
+- 如果遇到**单源边可为负数**，直接 Bellman-Ford（SPFA）
+- 如果有**负权回路**，优先 Bellman-Ford
+- 如果是**有限节点最短路**，也优先 Bellman-Ford，理由是写代码比较方便。
+- 如果是遇到**多源点求最短路**，直接 Floyd。
