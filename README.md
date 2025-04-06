@@ -1,20 +1,21 @@
 # Algorithm Practice
 
-”9ß2 »ùÓÚ¡¶´úÂëËæÏëÂ¼¡·µÄËã·¨Ë¢Ìâ¼ÇÂ¼
+ðŸ“š åŸºäºŽã€Šä»£ç éšæƒ³å½•ã€‹çš„ç®—æ³•åˆ·é¢˜è®°å½•
+2025.4.26 ä¸€åˆ·å®Œæˆ
 
-## ÏîÄ¿½á¹¹
+## é¡¹ç›®ç»“æž„
 ```text
 .
-©À©¤©¤ 1.Êý×é/               
-©¦   ©À©¤©¤ ¶þ·Ö²éÕÒ
-©¦   ©¦   ©À©¤©¤ 34Answer.cpp    # ´úÂëÊµÏÖ
-©¦   ©¦   ©¸©¤©¤ 34ÕÒÊ×Î².md      # ÌâÄ¿½âÎö
-©À©¤©¤ 2.Á´±í/             
-©À©¤©¤ 3.¹þÏ£±í/         
-©¸©¤©¤ Note.md                 #×öÌâ±Ê¼Ç
+â”œâ”€â”€ 1.æ•°ç»„/               
+â”‚   â”œâ”€â”€ äºŒåˆ†æŸ¥æ‰¾
+â”‚   â”‚   â”œâ”€â”€ 34Answer.cpp    # ä»£ç å®žçŽ°
+â”‚   â”‚   â””â”€â”€ 34æ‰¾é¦–å°¾.md      # é¢˜ç›®è§£æž
+â”œâ”€â”€ 2.é“¾è¡¨/             
+â”œâ”€â”€ 3.å“ˆå¸Œè¡¨/         
+â””â”€â”€ Note.md                 #åšé¢˜ç¬”è®°
 ```
 
-## ²Î¿¼Á´½Ó
+## å‚è€ƒé“¾æŽ¥
 
-- ´úÂëËæÏëÂ¼£º<https://www.programmercarl.com/>
-- LeetCode¹ÙÍø£º<https://leetcode.cn/>
+- ä»£ç éšæƒ³å½•ï¼š<https://www.programmercarl.com/>
+- LeetCodeå®˜ç½‘ï¼š<https://leetcode.cn/>
