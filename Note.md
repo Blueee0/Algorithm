@@ -1,34 +1,51 @@
-# 代码随想录
+# 算法刷题日记
 
-## 常见算法
+## 数组
 
-### 1. 快速幂
+### 常见方法
 
-指数折半：`16=4*4=2²*2²`
+1. 二分查找
+2. 
 
-```c++
-double myPow(double x, int n) {
-    double result = 1;
-    long long N = n; // 注意-n会超出int限制
+### 易错点
 
-    if (N < 0) { // 如果指数小于0，则反转底数x，并且把n变为正数
-        x = 1 / x;
-        N = -N;
-    }
-
-    while (N > 0) // 指数大于0进行指数折半，底数变其平方的操作
-    {
-        if (N & 1)       // 指数为奇数，power & 1这相当于power % 2 == 1
-            result *= x; // 分离出当前项并累乘后保存
-        N >>= 1;         // 指数折半,power >>= 1这相当于power /= 2;
-        x *= x;          // 底数变其平方
-    }
-
-    return result; // 返回最终结果
-}
-```
+1. 
 
 
+
+
+
+
+
+
+
+## 其他算法
+
+1. 快速幂：`16=4*4=2²*2²`
+
+   ```c++
+   double myPow(double x, int n) {
+       double result = 1;
+       long long N = n; // 注意-n会超出int限制
+   
+       if (N < 0) { // 如果指数小于0，则反转底数x，并且把n变为正数
+           x = 1 / x;
+           N = -N;
+       }
+   
+       while (N > 0) // 指数大于0进行指数折半，底数变其平方的操作
+       {
+           if (N & 1)       // 指数为奇数，power & 1这相当于power % 2 == 1
+               result *= x; // 分离出当前项并累乘后保存
+           N >>= 1;         // 指数折半,power >>= 1这相当于power /= 2;
+           x *= x;          // 底数变其平方
+       }
+   
+       return result; // 返回最终结果
+   }
+   ```
+
+   
 
 ## 备注
 
@@ -118,8 +135,6 @@ double myPow(double x, int n) {
 如果，我们想统计，在vec数组上 下标 2 到下标 5 之间的累加和，那是不是就用 p[5] - p[1] 就可以了。
 
 <img src="./Note.assets/20240627110604.png" alt="img" style="zoom:50%;" />
-
-
 
 ![img](./Note.assets/%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.png)
 
