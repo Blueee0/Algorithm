@@ -166,13 +166,12 @@
 
   - `if (nums[middle] > target) right = middle - 1`，因为当前这个nums[middle]一定不是target，那么接下来要查找的左区间结束下标位置就是 middle - 1
     ```python
-    class Solution(object):
-    def search(self, nums, target):
+    def search(self, nums: List[int], target: int) -> int:
         # 定义target在左闭右闭的区间里，[left, right]
         left = 0
         right = len(nums) - 1
         while left <= right:
-            middle = (left + right) / 2
+            middle = int((left + right) / 2)
             if nums[middle] > target:
                 right = middle - 1
             elif nums[middle] < target:
@@ -180,4 +179,52 @@
             else:
                 return middle  # 数组中找到目标值，直接返回下标
         return -1  # 未找到目标值
+    ```
+
+### 双指针法
+1. 移除元素
+   - 题目：
+    ```
+    给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
+     不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并原地修改输入数组。
+    ```
+   - 思路：
+    `slow`指向更新后的数组的下标，`fast`指向当前元素，`return slow`即更新后数组的个数。
+   - 代码：
+    ```python
+     def removeElement(self, nums: List[int], val: int) -> int:
+        slow = 0   # 慢指针指向下标
+        fast = 0   # 快指针指向当前元素
+        size = len(nums)
+        while fast < size :
+            if nums[fast] != val:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast += 1
+        return slow
+    ```
+
+2. 有序数组的平方
+   - 题目：
+    ```
+     给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序
+    ```
+   - 思路：
+    最大值要么在最左边，要么在最右边。`left = 0`,`right = len(nums) - 1`
+   - 代码：
+    ```python
+    def sortedSquares(self, nums: List[int]) -> List[int]:
+        left = 0
+        right = len(nums) - 1
+        i = len(nums) - 1
+        res = [float('inf')] * len(nums) # 需要提前定义列表，存放结果
+        while left <= right:
+            if(nums[left] ** 2 < nums[right] **2):
+                res[i] = nums[right] **2
+                right -= 1
+            else:
+                res[i] = nums[left] **2
+                left += 1
+            i -= 1
+        return res
     ```
