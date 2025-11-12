@@ -186,7 +186,7 @@
    - 题目：
     ```
     给你一个数组 nums 和一个值 val，你需要 原地 移除所有数值等于 val 的元素，并返回移除后数组的新长度。
-     不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并原地修改输入数组。
+    不要使用额外的数组空间，你必须仅使用 O(1) 额外空间并原地修改输入数组。
     ```
    - 思路：
     `slow`指向更新后的数组的下标，`fast`指向当前元素，`return slow`即更新后数组的个数。
@@ -207,7 +207,7 @@
 2. 有序数组的平方
    - 题目：
     ```
-     给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序
+    给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序
     ```
    - 思路：
     最大值要么在最左边，要么在最右边。`left = 0`,`right = len(nums) - 1`
@@ -227,4 +227,84 @@
                 left += 1
             i -= 1
         return res
+    ```
+
+### 滑动窗口
+1. 长度最小的子数组
+   - 题目：
+    ```
+    给定一个含有 n 个正整数的数组和一个正整数 s ，找出该数组中满足其和 ≥ s 的长度最小的 连续 子数组，并返回其长度。如果不存在符合条件的子数组，返回 0。
+    ```
+   - 思路：
+    只用一个for循环，那么这个循环的索引，一定是表示 滑动窗口的终止位置。
+        - 窗口内是什么：满足其和 ≥ s 的长度最小的 连续 子数组。
+        - 窗口的起始位置如何移动：如果当前窗口的值大于等于s了，窗口就要向前移动了（也就是该缩小了）。
+        - 窗口的结束位置如何移动：窗口的结束位置就是遍历数组的指针，也就是for循环里的索引。
+   - 代码：
+    ```python
+    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+        left = 0
+        right = 0
+        min_len = float('inf')
+        cur_sum = 0 #当前的累加值
+        while right < len(nums):
+            cur_sum += nums[right]
+            while(cur_sum >= target):
+                min_len = min(min_len, right - left + 1)
+                cur_sum -= nums[left]
+                left += 1
+            right += 1
+        if min_len == float('inf') :
+            return 0
+        else:
+            return min_len
+    ```
+
+### 模拟
+1. 螺旋矩阵II
+   - 题目：
+    ```
+    给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+    ```
+   - 代码：
+    ```python
+    def generateMatrix(self, n: int) -> List[List[int]]:
+        if n <= 0:
+            return []
+        
+        # 初始化 n x n 矩阵
+        matrix = [[0]*n for _ in range(n)]
+
+        # 初始化边界和起始值
+        top, bottom, left, right = 0, n-1, 0, n-1
+        num = 1
+
+        while top <= bottom and left <= right:
+            # 从左到右填充上边界
+            for i in range(left, right + 1):
+                matrix[top][i] = num
+                num += 1
+            top += 1
+
+            # 从上到下填充右边界
+            for i in range(top, bottom + 1):
+                matrix[i][right] = num
+                num += 1
+            right -= 1
+
+            # 从右到左填充下边界
+
+            for i in range(right, left - 1, -1):
+                matrix[bottom][i] = num
+                num += 1
+            bottom -= 1
+
+            # 从下到上填充左边界
+
+            for i in range(bottom, top - 1, -1):
+                matrix[i][left] = num
+                num += 1
+            left += 1
+
+        return matrix
     ```
