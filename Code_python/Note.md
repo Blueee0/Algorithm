@@ -308,3 +308,102 @@
 
         return matrix
     ```
+
+## 2.链表
+```python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+        
+class MyLinkedList:
+    def __init__(self):
+        self.dummy_head = ListNode()
+        self.size = 0
+
+    # 获取链表中下标为 index 的节点的值。
+    def get(self, index: int) -> int:
+        if index < 0 or index >= self.size:
+            return -1
+        current = self.dummy_head.next
+        for i in range(index):
+            current = current.next            
+        return current.val
+
+    # 将一个值为 val 的节点插入到链表中第一个元素之前
+    def addAtHead(self, val: int) -> None:
+        self.dummy_head.next = ListNode(val, self.dummy_head.next)
+        self.size += 1
+
+    # 将一个值为 val 的节点追加到链表中作为链表的最后一个元素
+    def addAtTail(self, val: int) -> None:
+        current = self.dummy_head
+        while current.next:
+            current = current.next
+        current.next = ListNode(val)
+        self.size += 1
+
+    # 将一个值为 val 的节点插入到链表中下标为 index 的节点之前。
+    def addAtIndex(self, index: int, val: int) -> None:
+        if index < 0 or index > self.size:
+            return  
+        current = self.dummy_head
+        for i in range(index):
+            current = current.next
+        current.next = ListNode(val, current.next)
+        self.size += 1
+
+    # 删除链表中下标为 index 的节点
+    def deleteAtIndex(self, index: int) -> None:
+        if index < 0 or index >= self.size:
+            return
+        current = self.dummy_head
+        for i in range(index):
+            current = current.next
+        current.next = current.next.next
+        self.size -= 1
+```
+### 基础操作
+1. 删除链表元素
+   - 题目：
+    ```
+    题意：删除链表中等于给定值 val 的所有节点。
+    ```
+   - 代码：
+    ```python
+    # Definition for singly-linked list.
+    # class ListNode:
+    #     def __init__(self, val=0, next=None):
+    #         self.val = val
+    #         self.next = next
+    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+        # 创建虚拟头结点
+        dummy_head = ListNode(next = head)
+        current = dummy_head
+
+        while current.next is not None:
+            if current.next.val == val:
+                current.next = current.next.next
+            else:
+                current = current.next
+        return dummy_head.next
+    ```
+2. 反转链表
+   - 题目：
+    ```
+    给你单链表的头节点 head ，请你反转链表，并返回反转后的链表。
+    ```
+   - 思路：
+     双指针法，cur指向当前节点，pre指向之前一个节点，先用tmp保存cur.next，然后cur.next = pre，pre = cur，cur = temp
+   - 代码：
+    ```python
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        cur = head
+        pre = None
+        while cur:
+            tmp = cur.next
+            cur.next = pre
+            pre = cur
+            cur = tmp
+        return pre
+    ```
