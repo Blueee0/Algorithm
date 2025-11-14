@@ -260,55 +260,6 @@
             return min_len
     ```
 
-### 模拟
-1. 螺旋矩阵II
-   - 题目：
-    ```
-    给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
-    ```
-   - 代码：
-    ```python
-    def generateMatrix(self, n: int) -> List[List[int]]:
-        if n <= 0:
-            return []
-        
-        # 初始化 n x n 矩阵
-        matrix = [[0]*n for _ in range(n)]
-
-        # 初始化边界和起始值
-        top, bottom, left, right = 0, n-1, 0, n-1
-        num = 1
-
-        while top <= bottom and left <= right:
-            # 从左到右填充上边界
-            for i in range(left, right + 1):
-                matrix[top][i] = num
-                num += 1
-            top += 1
-
-            # 从上到下填充右边界
-            for i in range(top, bottom + 1):
-                matrix[i][right] = num
-                num += 1
-            right -= 1
-
-            # 从右到左填充下边界
-
-            for i in range(right, left - 1, -1):
-                matrix[bottom][i] = num
-                num += 1
-            bottom -= 1
-
-            # 从下到上填充左边界
-
-            for i in range(bottom, top - 1, -1):
-                matrix[i][left] = num
-                num += 1
-            left += 1
-
-        return matrix
-    ```
-
 ## 2.链表
 ```python
 class ListNode:
@@ -407,3 +358,146 @@ class MyLinkedList:
             cur = tmp
         return pre
     ```
+3. 链表相交
+   - 题目：
+    ```
+    给你两个单链表的头节点 headA 和 headB ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 null 。
+    ```
+   - 思路：
+    1. 先计算两个链表的长度差，然后让长的链表先走差值步，然后两个链表一起走，直到相遇
+    2. 双指针法，两个指针分别从两个链表的头结点出发，走到末尾后，再从另一个链表的头结点出发，直到相遇
+   - 代码：
+    ```python
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        lenA, lenB = 0, 0
+
+        cur = headA
+        while cur:         # 求链表A的长度
+            cur = cur.next 
+            lenA += 1
+
+        cur = headB
+        while cur:         # 求链表B的长度
+            cur = cur.next 
+            lenB += 1
+
+        curA, curB = headA, headB
+
+        if lenA > lenB:     # 让curB为最长链表的头，lenB为其长度
+            curA, curB = curB, curA
+            lenA, lenB = lenB, lenA 
+
+        for _ in range(lenB - lenA):  # 让curA和curB在同一起点上（末尾位置对齐）
+            curB = curB.next 
+
+        while curA:         #  遍历curA 和 curB，遇到相同则直接返回
+            if curA == curB:
+                return curA
+            else:
+                curA = curA.next 
+                curB = curB.next
+                
+        return None 
+    ```
+
+
+### 双指针法
+3. 删除链表的倒数第N个节点
+   - 题目：
+    ```
+    给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+    ```
+   - 思路：
+    快慢指针，快指针先走n步，然后快慢指针一起走，当快指针走到头时，慢指针指向的就是倒数第n个节点
+   - 代码：
+    ```python
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        dummy_Head = ListNode(next = head)
+        slow = fast = dummy_Head
+
+        for i in range(n+1):
+            fast = fast.next
+
+        while fast:
+            slow = slow.next
+            fast = fast.next
+        
+        slow.next = slow.next.next
+        
+        return dummy_Head.next
+    ```
+
+## 模拟
+1. 螺旋矩阵II
+   - 题目：
+    ```
+    给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
+    ```
+   - 代码：
+    ```python
+    def generateMatrix(self, n: int) -> List[List[int]]:
+        if n <= 0:
+            return []
+        
+        # 初始化 n x n 矩阵
+        matrix = [[0]*n for _ in range(n)]
+
+        # 初始化边界和起始值
+        top, bottom, left, right = 0, n-1, 0, n-1
+        num = 1
+
+        while top <= bottom and left <= right:
+            # 从左到右填充上边界
+            for i in range(left, right + 1):
+                matrix[top][i] = num
+                num += 1
+            top += 1
+
+            # 从上到下填充右边界
+            for i in range(top, bottom + 1):
+                matrix[i][right] = num
+                num += 1
+            right -= 1
+
+            # 从右到左填充下边界
+
+            for i in range(right, left - 1, -1):
+                matrix[bottom][i] = num
+                num += 1
+            bottom -= 1
+
+            # 从下到上填充左边界
+
+            for i in range(bottom, top - 1, -1):
+                matrix[i][left] = num
+                num += 1
+            left += 1
+
+        return matrix
+    ```
+
+2. 两两交换链表中的节点
+   - 题目：
+    ```
+    给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+    ```
+   - 思路：
+    tmp暂存cur.next，tmp1暂存cur.next.next.next
+   - 代码：
+    ```python
+        def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        dummy_head = ListNode(next = head)
+        current = dummy_head
+
+        while current.next and current.next.next:
+            tmp = current.next
+            tmp1 = current.next.next.next
+
+            current.next = current.next.next
+            current.next.next = tmp
+            current = current.next.next # 更新current的值
+            tmp.next = tmp1
+            
+        return dummy_head.next
+    ```
+
