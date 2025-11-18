@@ -402,7 +402,7 @@ class MyLinkedList:
 
 
 ### 双指针法
-3. 删除链表的倒数第N个节点
+1. 删除链表的倒数第N个节点
    - 题目：
     ```
     给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
@@ -426,6 +426,59 @@ class MyLinkedList:
         
         return dummy_Head.next
     ```
+
+2. 环形链表II
+   - 题目：
+    ```
+    给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    ```
+   - 思路：
+    1. 如何判断是否有环：分别定义 fast 和 slow 指针，从头结点出发，fast指针每次移动两个节点，slow指针每次移动一个节点，如果 fast 和 slow指针在途中相遇 ，说明这个链表有环。
+    2. 如果有环，如何找到这个环的入口：这就意味着，从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点。
+    - 代码：
+    ```python
+    class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        slow = head
+        fast = head
+
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+            if slow == fast: # 说明此时有环
+                slow = head
+                while slow != fast:
+                    slow = slow.next
+                    fast = fast.next
+                return slow
+        return None
+    ```
+
+## 3.哈希表
+1. 有效的字母异位词
+   - 题目：
+    ```
+    给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的字母异位词。
+    ```
+   - 思路：
+    数组统计字母表
+
+   - 代码：
+   ```python
+    def isAnagram(self, s: str, t: str) -> bool:
+        record = [0] * 26
+        for i in s:
+            record[ord(i) - ord("a")] += 1
+        for i in t:
+            record[ord(i) - ord("a")] -= 1
+        for i in range(26):
+            #record数组如果有的元素不为零0，说明字符串s和t 一定是谁多了字符或者谁少了字符。
+            if record[i] != 0:
+                return False
+        return True
+   ```
+
 
 ## 模拟
 1. 螺旋矩阵II
