@@ -191,7 +191,7 @@
    - 思路：
     `slow`指向更新后的数组的下标，`fast`指向当前元素，`return slow`即更新后数组的个数。
    - 代码：
-    ```python
+     ```python
      def removeElement(self, nums: List[int], val: int) -> int:
         slow = 0   # 慢指针指向下标
         fast = 0   # 快指针指向当前元素
@@ -202,7 +202,7 @@
                 slow += 1
             fast += 1
         return slow
-    ```
+     ```
 
 2. 有序数组的平方
    - 题目：
@@ -212,8 +212,8 @@
    - 思路：
     最大值要么在最左边，要么在最右边。`left = 0`,`right = len(nums) - 1`
    - 代码：
-    ```python
-    def sortedSquares(self, nums: List[int]) -> List[int]:
+     ```python
+     def sortedSquares(self, nums: List[int]) -> List[int]:
         left = 0
         right = len(nums) - 1
         i = len(nums) - 1
@@ -227,7 +227,7 @@
                 left += 1
             i -= 1
         return res
-    ```
+     ```
 
 ### 滑动窗口
 1. 长度最小的子数组
@@ -241,8 +241,8 @@
         - 窗口的起始位置如何移动：如果当前窗口的值大于等于s了，窗口就要向前移动了（也就是该缩小了）。
         - 窗口的结束位置如何移动：窗口的结束位置就是遍历数组的指针，也就是for循环里的索引。
    - 代码：
-    ```python
-    def minSubArrayLen(self, target: int, nums: List[int]) -> int:
+     ```python
+     def minSubArrayLen(self, target: int, nums: List[int]) -> int:
         left = 0
         right = 0
         min_len = float('inf')
@@ -258,7 +258,7 @@
             return 0
         else:
             return min_len
-    ```
+     ```
 
 ## 2.链表
 ```python
@@ -321,13 +321,13 @@ class MyLinkedList:
     题意：删除链表中等于给定值 val 的所有节点。
     ```
    - 代码：
-    ```python
-    # Definition for singly-linked list.
-    # class ListNode:
-    #     def __init__(self, val=0, next=None):
-    #         self.val = val
-    #         self.next = next
-    def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
+     ```python
+     # Definition for singly-linked list.
+     # class ListNode:
+     #     def __init__(self, val=0, next=None):
+     #         self.val = val
+     #         self.next = next
+     def removeElements(self, head: Optional[ListNode], val: int) -> Optional[ListNode]:
         # 创建虚拟头结点
         dummy_head = ListNode(next = head)
         current = dummy_head
@@ -338,7 +338,7 @@ class MyLinkedList:
             else:
                 current = current.next
         return dummy_head.next
-    ```
+     ```
 2. 反转链表
    - 题目：
     ```
@@ -347,8 +347,8 @@ class MyLinkedList:
    - 思路：
      双指针法，cur指向当前节点，pre指向之前一个节点，先用tmp保存cur.next，然后cur.next = pre，pre = cur，cur = temp
    - 代码：
-    ```python
-    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+     ```python
+     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
         cur = head
         pre = None
         while cur:
@@ -357,7 +357,7 @@ class MyLinkedList:
             pre = cur
             cur = tmp
         return pre
-    ```
+     ```
 3. 链表相交
    - 题目：
     ```
@@ -367,8 +367,8 @@ class MyLinkedList:
     1. 先计算两个链表的长度差，然后让长的链表先走差值步，然后两个链表一起走，直到相遇
     2. 双指针法，两个指针分别从两个链表的头结点出发，走到末尾后，再从另一个链表的头结点出发，直到相遇
    - 代码：
-    ```python
-    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+     ```python
+     def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
         lenA, lenB = 0, 0
 
         cur = headA
@@ -398,7 +398,7 @@ class MyLinkedList:
                 curB = curB.next
                 
         return None 
-    ```
+     ```
 
 
 ### 双指针法
@@ -410,8 +410,8 @@ class MyLinkedList:
    - 思路：
     快慢指针，快指针先走n步，然后快慢指针一起走，当快指针走到头时，慢指针指向的就是倒数第n个节点
    - 代码：
-    ```python
-    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+     ```python
+     def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         dummy_Head = ListNode(next = head)
         slow = fast = dummy_Head
 
@@ -425,7 +425,7 @@ class MyLinkedList:
         slow.next = slow.next.next
         
         return dummy_Head.next
-    ```
+     ```
 
 2. 环形链表II
    - 题目：
@@ -436,9 +436,8 @@ class MyLinkedList:
     1. 如何判断是否有环：分别定义 fast 和 slow 指针，从头结点出发，fast指针每次移动两个节点，slow指针每次移动一个节点，如果 fast 和 slow指针在途中相遇 ，说明这个链表有环。
     2. 如果有环，如何找到这个环的入口：这就意味着，从头结点出发一个指针，从相遇节点 也出发一个指针，这两个指针每次只走一个节点， 那么当这两个指针相遇的时候就是 环形入口的节点。
     - 代码：
-    ```python
-    class Solution:
-    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+     ```python
+     def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
         slow = head
         fast = head
 
@@ -453,7 +452,7 @@ class MyLinkedList:
                     fast = fast.next
                 return slow
         return None
-    ```
+     ```
 
 ## 3.哈希表
 1. 有效的字母异位词
@@ -465,8 +464,8 @@ class MyLinkedList:
     数组统计字母表
 
    - 代码：
-   ```python
-    def isAnagram(self, s: str, t: str) -> bool:
+     ```python
+     def isAnagram(self, s: str, t: str) -> bool:
         record = [0] * 26
         for i in s:
             record[ord(i) - ord("a")] += 1
@@ -477,8 +476,76 @@ class MyLinkedList:
             if record[i] != 0:
                 return False
         return True
-   ```
+     ```
 
+2. 两个数组的交集
+   - 题目：
+    ```
+    给定两个数组，编写一个函数来计算它们的交集。
+    ```
+   - 代码：
+     ```python
+     def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        return list(set(nums1) & set(nums2))
+     ```
+
+3. 快乐数
+   - 题目：
+    ```
+    编写一个算法来判断一个数 n 是不是快乐数。
+
+    「快乐数」定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是 无限循环 但始终变不到 1。如果 可以变为  1，那么这个数就是快乐数。
+
+    如果 n 是快乐数就返回 True ；不是，则返回 False 。
+    ```
+   - 思路：
+     题目中说了会 无限循环，那么也就是说求和的过程中，sum会重复出现。
+ 
+     所以这道题目使用哈希法，来判断这个sum是否重复出现，如果重复了就是return false， 否则一直找到sum为1为止。
+   
+   - 代码：
+     ```python
+     def isHappy(self, n: int) -> bool:
+        record = set()  # 记录中间出现过的sum
+
+        while True:
+            n = self.getSum(n)
+            if n == 1:
+                return True
+
+            # 如果中间结果重复出现，说明陷入死循环了，该数不是快乐数
+            if n in record:
+                return False
+            else:
+                record.add(n)
+
+     def getSum(self, n: int) -> int:
+        Sum = 0
+        while n:
+            # n对10求余，然后Sum += 余数平方
+            n, r = divmod(n, 10)
+            Sum += r ** 2 
+        return Sum
+     ```
+
+4. 两数之和
+   - 题目：
+    ```
+    给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
+    ```
+   - 代码：
+     ```python
+     def twoSum(self, nums: List[int], target: int) -> List[int]:
+        records = dict()
+
+        # 遍历当前元素，并在map中寻找是否有匹配的key
+        for index, value in enumerate(nums):  
+            if target - value in records:   
+                return [records[target - value], index]
+            # 如果没找到匹配对，就把访问过的元素和下标加入到map中
+            records[value] = index    
+        return []
+     ```
 
 ## 模拟
 1. 螺旋矩阵II
@@ -487,8 +554,8 @@ class MyLinkedList:
     给定一个正整数 n，生成一个包含 1 到 n^2 所有元素，且元素按顺时针顺序螺旋排列的正方形矩阵。
     ```
    - 代码：
-    ```python
-    def generateMatrix(self, n: int) -> List[List[int]]:
+     ```python
+     def generateMatrix(self, n: int) -> List[List[int]]:
         if n <= 0:
             return []
         
@@ -527,7 +594,7 @@ class MyLinkedList:
             left += 1
 
         return matrix
-    ```
+     ```
 
 2. 两两交换链表中的节点
    - 题目：
@@ -537,7 +604,7 @@ class MyLinkedList:
    - 思路：
     tmp暂存cur.next，tmp1暂存cur.next.next.next
    - 代码：
-    ```python
+     ```python
         def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
         dummy_head = ListNode(next = head)
         current = dummy_head
@@ -552,5 +619,5 @@ class MyLinkedList:
             tmp.next = tmp1
             
         return dummy_head.next
-    ```
+     ```
 
