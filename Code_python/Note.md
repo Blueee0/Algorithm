@@ -547,6 +547,83 @@ class MyLinkedList:
         return []
      ```
 
+5. 四数相加II (哈希表)
+   - 题目：
+    ```
+    给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+    ```
+   - 思路：
+      1. 首先定义 一个unordered_map，key放a和b两数之和，value 放a和b两数之和出现的次数。
+      2. 遍历大A和大B数组，统计两个数组元素之和，和出现的次数，放到map中。
+      3. 定义int变量count，用来统计 a+b+c+d = 0 出现的次数。
+      4. 再遍历大C和大D数组，找到如果 0-(c+d) 在map中出现过的话，就用count把map中key对应的value也就是出现次数统计出来。
+      5. 最后返回统计值 count 就可以了
+   - 代码：
+     ```python
+     def twoSum(self, nums: List[int], target: int) -> List[int]:
+        records = dict()
+
+        # 遍历当前元素，并在map中寻找是否有匹配的key
+        for index, value in enumerate(nums):  
+            if target - value in records:   
+                return [records[target - value], index]
+            # 如果没找到匹配对，就把访问过的元素和下标加入到map中
+            records[value] = index    
+        return []
+     ```
+
+6. 三数之和（双指针）
+   - 题目：
+    ```
+    给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+    ```
+   - 思路：
+     1. 首先将数组排序，然后有一层for循环，i从下标0的地方开始，同时定一个下标left 定义在i+1的位置上，定义下标right 在数组结尾的位置上。
+     2. 依然还是在数组中找到 abc 使得a + b +c =0，我们这里相当于 a = nums[i]，b = nums[left]，c = nums[right]。
+     3. 接下来如何移动left 和right呢， 如果nums[i] + nums[left] + nums[right] > 0 就说明 此时三数之和大了，因为数组是排序后了，所以right下标就应该向左移动，这样才能让三数之和小一些。
+      4. 如果 nums[i] + nums[left] + nums[right] < 0 说明 此时 三数之和小了，left 就向右移动，才能让三数之和大一些，直到left与right相遇为止。
+
+   - 代码：
+     ```python
+     def threeSum(self, nums: List[int]) -> List[List[int]]:
+        result = []
+        nums.sort()
+        
+        for i in range(len(nums)):
+            # 如果第一个元素已经大于0，不需要进一步检查
+            if nums[i] > 0:
+                return result
+            
+            # 跳过相同的元素以避免重复
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+                
+            left = i + 1
+            right = len(nums) - 1
+            
+            while right > left:
+                sum_ = nums[i] + nums[left] + nums[right]
+                
+                if sum_ < 0:
+                    left += 1
+                elif sum_ > 0:
+                    right -= 1
+                else:
+                    result.append([nums[i], nums[left], nums[right]])
+                    
+                    # 跳过相同的元素以避免重复
+                    while right > left and nums[right] == nums[right - 1]:
+                        right -= 1
+                    while right > left and nums[left] == nums[left + 1]:
+                        left += 1
+                        
+                    right -= 1
+                    left += 1
+                    
+        return result
+     ```
+
+
 ## 模拟
 1. 螺旋矩阵II
    - 题目：
