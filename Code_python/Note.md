@@ -623,6 +623,114 @@ class MyLinkedList:
         return result
      ```
 
+7. 四数之和
+   - 题目：
+    ```
+    给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d 的值与 target 相等？找出所有满足条件且不重复的四元组。
+    ```
+   - 思路：
+    四数之和的双指针解法是两层for循环nums[k] + nums[i]为确定值，依然是循环内有left和right下标作为双指针，找出nums[k] + nums[i] + nums[left] + nums[right] == target的情况，三数之和的时间复杂度是O(n^2)，四数之和的时间复杂度是O(n^3) 。
+
+   - 代码：
+     ```python
+     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        nums.sort()
+        n = len(nums)
+        result = []
+        for i in range(n):
+            if nums[i] > target and nums[i] > 0 and target > 0:# 剪枝（可省）
+                break
+            if i > 0 and nums[i] == nums[i-1]:# 去重
+                continue
+            for j in range(i+1, n):
+                if nums[i] + nums[j] > target and target > 0: #剪枝（可省）
+                    break
+                if j > i+1 and nums[j] == nums[j-1]: # 去重
+                    continue
+                left, right = j+1, n-1
+                while left < right:
+                    s = nums[i] + nums[j] + nums[left] + nums[right]
+                    if s == target:
+                        result.append([nums[i], nums[j], nums[left], nums[right]])
+                        while left < right and nums[left] == nums[left+1]:
+                            left += 1
+                        while left < right and nums[right] == nums[right-1]:
+                            right -= 1
+                        left += 1
+                        right -= 1
+                    elif s < target:
+                        left += 1
+                    else:
+                        right -= 1
+        return result
+     ```
+
+## 4.字符串
+1. 反转字符串（双指针法）
+   - 题目：
+    ```
+    将输入的字符串反转过来
+    ```
+   - 代码：
+     ```python
+     def reverseString(self, s: List[str]) -> None: 
+        left = 0
+        right = len(s) - 1
+        while left < right:
+            tmp = s[left]
+            s[left] = s[right]
+            s[right] = tmp
+            left += 1
+            right -= 1
+     ```
+
+2. 反转字符串II（模拟）
+   - 题目：
+    ```
+    给定一个字符串 s 和一个整数 k，从字符串开头算起, 每计数至 2k 个字符，就反转这 2k 个字符中的前 k 个字符。
+    如果剩余字符少于 k 个，则将剩余字符全部反转。
+    如果剩余字符小于 2k 但大于或等于 k 个，则反转前 k 个字符，其余字符保持原样。
+    ```
+   - 思路：
+    其实在遍历字符串的过程中，只要让 i += (2 * k)，i 每次移动 2 * k 就可以了，然后判断是否需要有反转的区间。
+
+   - 代码：
+     ```python
+     def reverseStr(self, s: str, k: int) -> str:
+        """
+        1. 使用range(start, end, step)来确定需要调换的初始位置
+        2. 对于字符串s = 'abc'，如果使用s[0:999] ===> 'abc'。字符串末尾如果超过最大长度，则会返回至字符串最后一个值，这个特性可以避免一些边界条件的处理。
+        3. 用切片整体替换，而不是一个个替换.
+        """
+        def reverse_substring(text):
+            left, right = 0, len(text) - 1
+            while left < right:
+                text[left], text[right] = text[right], text[left]
+                left += 1
+                right -= 1
+            return text
+        
+        res = list(s)
+
+        for cur in range(0, len(s), 2 * k):
+            res[cur: cur + k] = reverse_substring(res[cur: cur + k])
+        
+        return ''.join(res)
+     ```
+
+
+1. 模版
+   - 题目：
+    ```
+    这是题目
+    ```
+   - 思路：
+    这是思路
+
+   - 代码：
+     ```python
+     def result
+     ```
 
 ## 模拟
 1. 螺旋矩阵II
