@@ -718,6 +718,126 @@ class MyLinkedList:
         return ''.join(res)
      ```
 
+3. 反转字符串中的单词
+   - 题目：
+     ```
+     给定一个字符串，逐个翻转字符串中的每个单词。
+     ```
+   - 思路：
+     将字符串转换成列表类型 -> 反转单词 -> 将列表转换为字符串
+
+   - 代码：
+     ```python
+     def reverseWords(self, s: str) -> str:
+        # 将字符串拆分为单词，即转换成列表类型
+        words = s.split()
+
+        # 反转单词
+        left, right = 0, len(words) - 1
+        while left < right:
+            words[left], words[right] = words[right], words[left]
+            left += 1
+            right -= 1
+
+        # 将列表转换成字符串
+        return " ".join(words)
+     ```
+
+### KMP算法
+- KMP的经典思想就是：当出现字符串不匹配时，可以记录一部分之前已经匹配的文本内容，利用这些信息避免从头再去做匹配。
+1. 找出字符串中第一个匹配项的下标（即`strStr()`）
+   - 题目：
+     ```
+     给你两个字符串 haystack 和 needle ，请你在 haystack 字符串中找出 needle 字符串的第一个匹配项的下标（下标从 0 开始）。如果 needle 不是 haystack 的一部分，则返回  -1 。
+     ```
+   - 思路：
+     1. 初始化：
+
+        a. 定义两个指针i和j，j指向前缀末尾位置，i指向后缀末尾位置。`j = -1`, 
+
+        b. 初始化next数组 `next[0] = j`
+        - `next[i]` 表示 i（包括i）之前最长相等的前后缀长度（其实就是j）
+
+     2. 从`i = 1`开始遍历字符串s
+
+        a. 处理前后缀不相同的情况：向前回退`j = next[j]`
+        
+        b. 处理前后缀相同的情况：i和j++，同时更新next数组`j++;` `next[i] = j`
+
+   - 代码：
+     ```python
+     class Solution:
+     # 构建next数组
+     def getNext(self, next, s):
+        # 1.初始化
+        j = -1
+        next[0] = j
+        # 2. 循环遍历
+        for i in range(1, len(s)):
+            # a. 未找到匹配前后缀
+            while j >= 0 and s[i] != s[j+1]:
+                j = next[j]
+            # b. 找到匹配前后缀
+            if s[i] == s[j+1]:
+                j += 1
+            next[i] = j
+    
+     def strStr(self, haystack: str, needle: str) -> int:
+        # 特殊处理：当needle为空没，返回0
+        if not needle:
+            return 0
+        next = [0] * len(needle)
+        self.getNext(next, needle)
+        j = -1
+        # 在haystack字符串里面找needle的匹配项
+        for i in range(len(haystack)):
+            while j >= 0 and haystack[i] != needle[j+1]:
+                j = next[j]
+            if haystack[i] == needle[j+1]:
+                j += 1
+            if j == len(needle) - 1:
+                return i - len(needle) + 1
+        return -1
+     ```
+
+2. 重复的子字符串
+   - 题目：
+     ```
+     给定一个非空的字符串，判断它是否可以由它的一个子串重复多次构成。给定的字符串只含有小写英文字母，并且长度不超过10000。
+     ```
+   - 思路：
+     
+     如果一个字符串s是由重复子串组成，那么 最长相等前后缀不包含的子串一定是字符串s的最小重复子串。
+     
+     如果s 是由最小重复子串p组成，即 s = n * p
+
+   - 代码：
+     ```python
+     # 构建next数组
+     def getNext(self, next, s):
+        # 1.初始化
+        j = -1
+        next[0] = j
+        # 2. 循环遍历
+        for i in range(1, len(s)):
+            # a. 未找到匹配前后缀
+            while j >= 0 and s[i] != s[j+1]:
+                j = next[j]
+            # b. 找到匹配前后缀
+            if s[i] == s[j+1]:
+                j += 1
+            next[i] = j
+
+     def repeatedSubstringPattern(self, s: str) -> bool:
+        if len(s) == 0:
+            return False
+        next = [0] * len(s)
+        self.getNext(next, s)
+        if next[-1] != -1 and len(s) % (len(s) - (next[-1] + 1)) == 0:
+            return True
+        return False
+     ```
+
 
 1. 模版
    - 题目：
