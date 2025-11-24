@@ -838,6 +838,93 @@ class MyLinkedList:
         return False
      ```
 
+## 5.栈和队列
+- 用队列实现栈
+  ```python
+  class MyStack:
+
+    def __init__(self):
+        self.que = deque()
+
+    def push(self, x: int) -> None:
+        self.que.append(x)
+
+    def pop(self) -> int:
+        if self.empty():
+            return None
+        for i in range(len(self.que)-1):
+            self.que.append(self.que.popleft())
+        return self.que.popleft()
+
+    def top(self) -> int:
+        # 写法一：
+        # if self.empty():
+        #     return None
+        # return self.que[-1]
+
+        # 写法二：
+        if self.empty():
+            return None
+        for i in range(len(self.que)-1):
+            self.que.append(self.que.popleft())
+        temp = self.que.popleft()
+        self.que.append(temp)
+        return temp
+
+    def empty(self) -> bool:
+        return not self.que
+  ```
+
+- 用栈实现队列
+  ```python
+  class MyQueue:
+
+    def __init__(self):
+        """
+        in主要负责push，out主要负责pop
+        """
+        self.stack_in = []
+        self.stack_out = []
+
+
+    def push(self, x: int) -> None:
+        """
+        有新元素进来，就往in里面push
+        """
+        self.stack_in.append(x)
+
+
+    def pop(self) -> int:
+        """
+        Removes the element from in front of queue and returns that element.
+        """
+        if self.empty():
+            return None
+        
+        if self.stack_out:
+            return self.stack_out.pop()
+        else:
+            for i in range(len(self.stack_in)):
+                self.stack_out.append(self.stack_in.pop())
+            return self.stack_out.pop()
+
+
+    def peek(self) -> int:
+        """
+        Get the front element.
+        """
+        ans = self.pop()
+        self.stack_out.append(ans)
+        return ans
+
+
+    def empty(self) -> bool:
+        """
+        只要in或者out有元素，说明队列不为空
+        """
+        return not (self.stack_in or self.stack_out)
+  ```
+
 
 1. 模版
    - 题目：
