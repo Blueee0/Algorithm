@@ -925,12 +925,101 @@ class MyLinkedList:
         return not (self.stack_in or self.stack_out)
   ```
 
+1. 有效的括号
+   - 题目：
+     ```
+     给定一个只包括 '('，')'，'{'，'}'，'['，']' 的字符串，判断字符串是否有效。
+     ```
+   - 思路：
+     1. 第一种情况，字符串里左方向的括号多余了 ，所以不匹配。
+        - 已经遍历完了字符串，但是栈不为空，说明有相应的左括号没有右括号来匹配，所以return false
+     2. 第二种情况，括号没有多余，但是 括号的类型没有匹配上。
+        - 遍历字符串匹配的过程中，发现栈里没有要匹配的字符。所以return false
+     3. 第三种情况，字符串里右方向的括号多余了，所以不匹配。  
+        - 遍历字符串匹配的过程中，栈已经为空了，没有匹配的字符了，说明右括号没有找到对应的左括号return false
+
+   - 代码：
+     ```python
+     def isValid(self, s: str) -> bool:
+        stack = []
+        
+        for item in s:
+            if item == '(':
+                stack.append(')')
+            elif item == '[':
+                stack.append(']')
+            elif item == '{':
+                stack.append('}')
+            elif not stack or stack[-1] != item:
+                return False
+            else:
+                stack.pop()
+        
+        if not stack:
+            return True
+        else:
+            return False
+     ```
+
+
+2. 删除字符串中的所有相邻重复项
+   - 题目：
+     ```
+     给出由小写字母组成的字符串 S，重复项删除操作会选择两个相邻且相同的字母，并删除它们。
+     在 S 上反复执行重复项删除操作，直到无法继续删除。
+     返回最终的字符串。答案保证唯一。
+     ```
+   - 思路：
+     用栈存放遍历过的元素，当遍历当前的这个元素的时候，检查栈顶是否是相同元素，若是则删除，若否则继续遍历。
+
+   - 代码：
+     ```python
+     def removeDuplicates(self, s: str) -> str:
+        stack = []
+        for item in s:
+            if stack and stack[-1] == item:
+                stack.pop()
+            else:
+                stack.append(item)
+        return "".join(stack)  # 字符串拼接
+     ```
+
+
+3. 逆波兰表达式求值
+   - 题目：
+     ```
+     根据 逆波兰表示法，求表达式的值。
+     ```
+
+   - 代码：
+     ```python
+     from operator import add, sub, mul
+
+     def div(x, y):
+        # 使用整数除法的向零取整方式
+        return int(x / y) if x * y > 0 else -(abs(x) // abs(y))
+
+     class Solution(object):
+        op_map = {'+': add, '-': sub, '*': mul, '/': div}
+        
+        def evalRPN(self, tokens: List[str]) -> int:
+            stack = []
+            for token in tokens:
+                if token not in {'+', '-', '*', '/'}:
+                    stack.append(int(token))
+                else:
+                    op2 = stack.pop()
+                    op1 = stack.pop()
+                    stack.append(self.op_map[token](op1, op2))  # 第一个出来的在运算符后面
+            return stack.pop()
+     ```
+
 
 1. 模版
    - 题目：
-    ```
-    这是题目
-    ```
+     ```
+     这是题目
+     ```
    - 思路：
     这是思路
 
