@@ -1014,6 +1014,73 @@ class MyLinkedList:
             return stack.pop()
      ```
 
+4. 滑动窗口最大值
+   - 题目：
+     ```
+     给定一个数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+    
+     返回滑动窗口中的最大值。
+     ```
+   - 思路：
+    这是思路
+
+   - 代码：
+     ```python
+        from collections import deque
+        def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+            max_list = [] # 结果集合
+            kept_nums = deque() # 单调队列
+
+            for i in range(len(nums)):
+                update_kept_nums(kept_nums, nums[i]) # 右侧新元素加入
+
+                if i >= k and nums[i - k] == kept_nums[0]: # 左侧旧元素如果等于单调队列头元素，需要移除头元素
+                    kept_nums.popleft()
+
+                if i >= k - 1:
+                    max_list.append(kept_nums[0])
+
+            return max_list
+
+        def update_kept_nums(kept_nums, num): # num 是新加入的元素
+            # 所有小于新元素的队列尾部元素，在新元素出现后，都是没有价值的，都需要被移除
+            while kept_nums and num > kept_nums[-1]:
+                kept_nums.pop()
+
+            kept_nums.append(num)
+     ```
+
+5. 前k个高频元素
+   - 题目：
+     ```
+     给定一个非空的整数数组，返回其中出现频率前 k 高的元素。
+     ```
+     
+   - 代码：
+     ```python
+     import heapq
+        def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+            #要统计元素出现频率
+            map_ = {} #nums[i]:对应出现的次数
+            for i in range(len(nums)):
+                map_[nums[i]] = map_.get(nums[i], 0) + 1
+            
+            #对频率排序
+            #定义一个小顶堆，大小为k
+            pri_que = [] #小顶堆
+            
+            #用固定大小为k的小顶堆，扫描所有频率的数值
+            for key, freq in map_.items():
+                heapq.heappush(pri_que, (freq, key))
+                if len(pri_que) > k: #如果堆的大小大于了K，则队列弹出，保证堆的大小一直为k
+                    heapq.heappop(pri_que)
+            
+            #找出前K个高频元素，因为小顶堆先弹出的是最小的，所以倒序来输出到数组
+            result = [0] * k
+            for i in range(k-1, -1, -1):
+                result[i] = heapq.heappop(pri_que)[1]
+            return result
+     ```
 
 1. 模版
    - 题目：
